@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="data:," />
+    <title>Loyalty Flip Card — demo</title>
+    <style>
+      :root {
+        --ha-card-background: #ffffff;
+        --card-background-color: #ffffff;
+        --primary-text-color: #1c1c1e;
+        --secondary-text-color: #6b7280;
+        --primary-color: #2563eb;
+        --ha-card-border-radius: 16px;
+        --ha-card-box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
+        --ha-font-family-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        --page-bg: #f4f6f9;
+        --page-fg: #111827;
+        --panel-bg: #ffffff;
+        --panel-border: #e2e8f0;
+        --muted: #64748b;
+        color-scheme: light;
+      }
+
+      html[data-theme='dark'] {
+        --ha-card-background: #1f2937;
+        --card-background-color: #1f2937;
+        --primary-text-color: #f8fafc;
+        --secondary-text-color: #cbd5e1;
+        --primary-color: #60a5fa;
+        --ha-card-box-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+        --page-bg: #0f172a;
+        --page-fg: #e2e8f0;
+        --panel-bg: #111c31;
+        --panel-border: #25324a;
+        --muted: #94a3b8;
+        color-scheme: dark;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        padding: 32px 24px 48px;
+        background: var(--page-bg);
+        color: var(--page-fg);
+        font-family: var(--ha-font-family-body);
+      }
+
+      header.page-head {
+        max-width: 1120px;
+        margin: 0 auto 24px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 24px;
+        letter-spacing: -0.02em;
+      }
+
+      .lede {
+        margin: 6px 0 0;
+        max-width: 560px;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(320px, 400px);
+        gap: 24px;
+        max-width: 1120px;
+        margin: 0 auto;
+        align-items: start;
+      }
+
+      @media (max-width: 860px) {
+        .layout {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+
+      .stage-wrap,
+      .config-wrap {
+        padding: 20px;
+        border: 1px solid var(--panel-border);
+        border-radius: 18px;
+        background: var(--panel-bg);
+      }
+
+      .stage-head,
+      .config-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .stage-head h2,
+      .config-head h2 {
+        margin: 0;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .stage {
+        display: grid;
+        place-items: center;
+        min-height: 260px;
+        padding: 24px;
+        border-radius: 14px;
+        background: color-mix(in srgb, var(--page-bg) 70%, var(--panel-bg));
+      }
+
+      loyalty-flip-card {
+        display: block;
+        width: min(100%, 380px);
+      }
+
+      .presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 16px;
+      }
+
+      button {
+        padding: 8px 12px;
+        border: 1px solid var(--panel-border);
+        border-radius: 999px;
+        background: transparent;
+        color: var(--page-fg);
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      button:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+      }
+
+      button.primary {
+        border-color: var(--primary-color);
+        background: var(--primary-color);
+        color: #ffffff;
+      }
+
+      button.primary:hover {
+        opacity: 0.9;
+        color: #ffffff;
+      }
+
+      textarea {
+        display: block;
+        width: 100%;
+        min-height: 300px;
+        margin: 0 0 12px;
+        padding: 12px;
+        border: 1px solid var(--panel-border);
+        border-radius: 12px;
+        background: var(--page-bg);
+        color: var(--page-fg);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12px;
+        line-height: 1.55;
+        resize: vertical;
+        tab-size: 2;
+      }
+
+      textarea:focus {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 1px;
+      }
+
+      .config-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      #error {
+        margin: 12px 0 0;
+        font-size: 12px;
+        line-height: 1.5;
+        color: #dc2626;
+        white-space: pre-wrap;
+      }
+
+      #error:empty {
+        display: none;
+      }
+
+      .tip {
+        margin: 12px 0 0;
+        font-size: 12px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-head">
+      <div>
+        <h1>Loyalty Flip Card</h1>
+        <p class="lede">
+          Static preview harness with a mocked Home Assistant shell. Click the card to open the code
+          popup, then try the presets and edit the configuration.
+        </p>
+      </div>
+      <button id="theme-toggle" type="button">Toggle dark mode</button>
+    </header>
+
+    <main class="layout">
+      <section class="stage-wrap">
+        <div class="stage-head">
+          <h2>Preview</h2>
+          <span id="mode-label" class="lede"></span>
+        </div>
+        <div class="stage">
+          <loyalty-flip-card id="card"></loyalty-flip-card>
+        </div>
+        <div class="presets" id="presets"></div>
+      </section>
+
+      <section class="config-wrap">
+        <div class="config-head">
+          <h2>Configuration</h2>
+        </div>
+        <textarea id="config" spellcheck="false" aria-label="Card configuration JSON"></textarea>
+        <div class="config-actions">
+          <button class="primary" id="apply" type="button">Apply configuration</button>
+          <span class="tip" style="margin: 0">or press ⌘/Ctrl + Enter</span>
+        </div>
+        <p id="error" role="alert"></p>
+        <p class="tip">
+          This harness uses stubs for <code>ha-card</code> and <code>ha-icon</code>. The visual
+          editor appears inside Home Assistant only.
+        </p>
+      </section>
+    </main>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

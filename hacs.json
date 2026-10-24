@@ -1,0 +1,6 @@
+{
+  "name": "Loyalty Flip Card",
+  "filename": "loyalty-flip-card.js",
+  "render_readme": true,
+  "homeassistant": "2024.8.0"
+}
