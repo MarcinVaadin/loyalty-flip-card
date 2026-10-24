@@ -11,15 +11,16 @@ describe('normalizeConfig', () => {
       code: '123',
       format: 'qr',
       barcode_format: 'CODE128',
-      title: 'Loyalty Card',
+      show_icon: true,
       show_code_text: true,
-      popup_title: 'Loyalty Card',
       qr_size: 320,
       barcode_height: 96,
       barcode_width: 2,
       fallback_to_qr: true,
       icon: 'mdi:card-account-details',
     });
+    expect(config.title).toBeUndefined();
+    expect(config.popup_title).toBeUndefined();
   });
 
   it('trims the code and converts finite numbers to strings', () => {
@@ -60,9 +61,11 @@ describe('normalizeConfig', () => {
   it('honors explicit false booleans', () => {
     const config = normalizeConfig({
       ...base,
+      show_icon: false,
       show_code_text: false,
       fallback_to_qr: false,
     });
+    expect(config.show_icon).toBe(false);
     expect(config.show_code_text).toBe(false);
     expect(config.fallback_to_qr).toBe(false);
   });

@@ -125,6 +125,27 @@ const PRESETS: Array<{ label: string; config: DemoConfig }> = [
     },
   },
   {
+    label: 'PDF417',
+    config: {
+      code: 'MEMBER:4821-9930;TIER:GOLD',
+      format: 'barcode',
+      barcode_format: 'PDF417',
+      title: 'Skyline Air',
+      subtitle: 'Frequent flyer',
+      color: '#7c3aed',
+    },
+  },
+  {
+    label: 'Icon only (no title)',
+    config: {
+      code: 'LOYALTY-8842-9931',
+      format: 'barcode',
+      barcode_format: 'CODE128',
+      icon: 'mdi:card-account-details',
+      color: '#0f766e',
+    },
+  },
+  {
     label: 'Invalid barcode (fallback)',
     config: {
       code: 'MEMBER-42',

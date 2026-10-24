@@ -6,6 +6,7 @@ import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import { normalizeConfig, readableInk, type LoyaltyFlipCardConfig } from './config';
 import {
   renderBarcodeSvg,
+  renderPdf417Svg,
   renderQrSvg,
   resolveCode,
   validateBarcodeValue,
@@ -15,7 +16,7 @@ import { cardStyles } from './styles';
 import type { HomeAssistant, LovelaceCardConfig } from './types';
 import './loyalty-flip-card-editor';
 
-type ContentState = 'none' | 'empty' | 'qr' | 'barcode' | 'error';
+type ContentState = 'none' | 'empty' | 'qr' | 'barcode' | 'pdf417' | 'error';
 
 export class LoyaltyFlipCard extends LitElement {
   public static styles = cardStyles;
@@ -27,7 +28,7 @@ export class LoyaltyFlipCard extends LitElement {
   @state() private _copied = false;
   @state() private _logoFailed = false;
   @state() private _content: ContentState = 'none';
-  @state() private _qrSvg?: string;
+  @state() private _svg?: string;
   @state() private _error?: string;
   @state() private _note?: string;
 
@@ -87,34 +88,47 @@ export class LoyaltyFlipCard extends LitElement {
   private _renderFace(config: LoyaltyFlipCardConfig) {
     return html`
       <button
-        class="face"
+        class=${classMap({ face: true, 'face--centered': !config.title })}
         type="button"
         ${ref(this._trigger)}
         aria-haspopup="dialog"
         aria-expanded=${this._open ? 'true' : 'false'}
-        aria-label=${`Show ${config.title} code`}
+        aria-label=${config.title ? `Show ${config.title} code` : 'Show loyalty code'}
         @click=${this._openPopup}
       >
         <div class="face__head">
-          <div class="badge">
-            ${
-              config.logo && !this._logoFailed
-                ? html`<img src=${config.logo} alt="" @error=${this._onLogoError} />`
-                : config.icon
-                  ? html`<ha-icon icon=${config.icon}></ha-icon>`
-                  : nothing
-            }
-          </div>
-          <div class="face__copy">
-            <div class="face__title">${config.title}</div>
-            ${
-              config.subtitle ? html`<div class="face__subtitle">${config.subtitle}</div>` : nothing
-            }
-          </div>
+          ${
+            config.show_icon
+              ? html`
+                  <div class="badge">
+                    ${
+                      config.logo && !this._logoFailed
+                        ? html`<img src=${config.logo} alt="" @error=${this._onLogoError} />`
+                        : config.icon
+                          ? html`<ha-icon icon=${config.icon}></ha-icon>`
+                          : nothing
+                    }
+                  </div>
+                `
+              : nothing
+          }
+          ${
+            config.title || config.subtitle
+              ? html`
+                  <div class="face__copy">
+                    ${config.title ? html`<div class="face__title">${config.title}</div>` : nothing}
+                    ${
+                      config.subtitle
+                        ? html`<div class="face__subtitle">${config.subtitle}</div>`
+                        : nothing
+                    }
+                  </div>
+                `
+              : nothing
+          }
         </div>
         <div class="face__hint">
           <ha-icon icon=${config.format === 'barcode' ? 'mdi:barcode' : 'mdi:qrcode'}></ha-icon>
-          <span>Tap to show code</span>
           <ha-icon class="face__chevron" icon="mdi:chevron-right"></ha-icon>
         </div>
       </button>
@@ -125,13 +139,18 @@ export class LoyaltyFlipCard extends LitElement {
     return html`
       <dialog
         ${ref(this._dialog)}
-        aria-labelledby="loyalty-code-title"
+        aria-labelledby=${config.popup_title ? 'loyalty-code-title' : nothing}
+        aria-label=${config.popup_title ? nothing : 'Loyalty code'}
         @click=${this._onDialogClick}
         @close=${this._onDialogClose}
       >
         <div class="panel">
           <header class="panel__head">
-            <h2 class="panel__title" id="loyalty-code-title">${config.popup_title}</h2>
+            ${
+              config.popup_title
+                ? html`<h2 class="panel__title" id="loyalty-code-title">${config.popup_title}</h2>`
+                : nothing
+            }
             <button class="icon-btn" type="button" aria-label="Close" @click=${this._closePopup}>
               <ha-icon icon="mdi:close"></ha-icon>
             </button>
@@ -177,13 +196,15 @@ export class LoyaltyFlipCard extends LitElement {
         return html`<p class="message">${this._error ?? 'Unable to render this code.'}</p>`;
       case 'barcode':
         return html`<svg class="barcode" ${ref(this._barcode)} aria-label="Barcode"></svg>`;
+      case 'pdf417':
+        return this._svg ? unsafeSVG(this._svg) : nothing;
       case 'qr':
         if (this._error) return html`<p class="message">${this._error}</p>`;
-        if (!this._qrSvg) {
+        if (!this._svg) {
           return html`<div class="loading" role="status">Preparing code…</div>`;
         }
         return html`
-          <div class="qr" role="img" aria-label="QR code">${unsafeSVG(this._qrSvg)}</div>
+          <div class="qr" role="img" aria-label="QR code">${unsafeSVG(this._svg)}</div>
         `;
       default:
         return nothing;
@@ -249,7 +270,7 @@ export class LoyaltyFlipCard extends LitElement {
     this._renderToken += 1;
     this._renderKey = '';
     this._content = 'none';
-    this._qrSvg = undefined;
+    this._svg = undefined;
     this._error = undefined;
     this._note = undefined;
     this._logoFailed = false;
@@ -273,7 +294,7 @@ export class LoyaltyFlipCard extends LitElement {
     this._renderKey = key;
     this._renderToken += 1;
     const token = this._renderToken;
-    this._qrSvg = undefined;
+    this._svg = undefined;
     this._error = undefined;
     this._note = undefined;
 
@@ -291,13 +312,13 @@ export class LoyaltyFlipCard extends LitElement {
 
   private async _showQr(value: string, token: number, note?: string): Promise<void> {
     this._content = 'qr';
-    this._qrSvg = undefined;
+    this._svg = undefined;
     if (note) this._note = note;
 
     try {
       const svg = await renderQrSvg(value);
       if (token !== this._renderToken) return;
-      this._qrSvg = svg;
+      this._svg = svg;
     } catch {
       if (token !== this._renderToken) return;
       this._content = 'error';
@@ -323,8 +344,24 @@ export class LoyaltyFlipCard extends LitElement {
       return;
     }
 
+    if (format === 'PDF417') {
+      try {
+        this._svg = renderPdf417Svg(resolved.value, config.barcode_width);
+        this._content = 'pdf417';
+        this._note = resolved.note;
+      } catch (error) {
+        await this._handleBarcodeProblem(
+          encodeFailure(format, error),
+          resolved.value,
+          config,
+          token,
+        );
+      }
+      return;
+    }
+
     this._content = 'barcode';
-    this._qrSvg = undefined;
+    this._svg = undefined;
     await this.updateComplete;
     if (token !== this._renderToken) return;
 
@@ -347,9 +384,7 @@ export class LoyaltyFlipCard extends LitElement {
       if (token !== this._renderToken) return;
       this._note = resolved.note;
     } catch (error) {
-      const detail = error instanceof Error && error.message ? ` ${error.message}` : '';
-      const message = `This value cannot be encoded as ${format}.${detail}`;
-      await this._handleBarcodeProblem(message, resolved.value, config, token);
+      await this._handleBarcodeProblem(encodeFailure(format, error), resolved.value, config, token);
     }
   }
 
@@ -366,6 +401,11 @@ export class LoyaltyFlipCard extends LitElement {
     this._content = 'error';
     this._error = message;
   }
+}
+
+function encodeFailure(format: string, error: unknown): string {
+  const detail = error instanceof Error && error.message ? ` ${error.message}` : '';
+  return `This value cannot be encoded as ${format}.${detail}`;
 }
 
 if (!customElements.get('loyalty-flip-card')) {

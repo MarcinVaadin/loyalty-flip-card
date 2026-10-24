@@ -4,7 +4,7 @@ A Home Assistant Lovelace card that keeps a loyalty QR code or barcode out of si
 it. Tapping the card opens a large, high-contrast popup that is easy to scan at the checkout and
 closes with a tap on the backdrop, the close button, or <kbd>Esc</kbd>.
 
-- QR codes and 1D barcodes: Code 128, EAN-13, EAN-8, UPC-A, Code 39, ITF-14, Codabar, MSI.
+- QR codes, PDF417, and 1D barcodes: Code 128, EAN-13, EAN-8, UPC-A, Code 39, ITF-14, Codabar, MSI.
 - Auto-detection of EAN/UPC barcodes from numeric loyalty numbers.
 - Optional branding: title, subtitle, icon or logo, accent color.
 - Optional fallback to a QR code when a barcode cannot encode the value.
@@ -58,15 +58,16 @@ entity. Use a dashboard-only card if you do not want the code in a shared dashbo
 | `code`           | string  | **required**               | Value encoded in the QR code or barcode. Quote it in YAML.                                                                              |
 | `format`         | string  | `qr`                       | `qr`, `barcode`, or `auto`.                                                                                                             |
 | `barcode_format` | string  | `CODE128`                  | Symbology used when `format: barcode`.                                                                                                  |
-| `title`          | string  | `Loyalty Card`             | Card face title.                                                                                                                        |
+| `title`          | string  | –                          | Card face title. Without it, only the logo or icon is shown, centered.                                                                  |
 | `subtitle`       | string  | –                          | Optional card face subtitle.                                                                                                            |
+| `show_icon`      | boolean | `true`                     | Show the icon or logo on the card face.                                                                                                 |
 | `icon`           | string  | `mdi:card-account-details` | Icon shown on the card face when no logo is set.                                                                                        |
 | `logo`           | string  | –                          | Image URL for the card face, for example `/local/my-logo.png`.                                                                          |
 | `color`          | string  | HA theme                   | Accent color of the card face. Text color is adjusted automatically.                                                                    |
-| `popup_title`    | string  | `title`                    | Heading shown above the code in the popup.                                                                                              |
+| `popup_title`    | string  | `title`                    | Heading shown above the code in the popup. Hidden when empty.                                                                           |
 | `show_code_text` | boolean | `true`                     | Show the raw code below the symbol so it can be entered manually.                                                                       |
 | `qr_size`        | number  | `320`                      | Maximum QR size in pixels (160–640). Never wider than the viewport.                                                                     |
-| `barcode_height` | number  | `96`                       | Barcode bar height in pixels (48–240).                                                                                                  |
+| `barcode_height` | number  | `96`                       | Barcode bar height in pixels (48–240). Ignored for PDF417.                                                                              |
 | `barcode_width`  | number  | `2`                        | Width of one barcode module in pixels (1–4). Larger values make compact barcodes wider; long barcodes are scaled down to fit the popup. |
 | `fallback_to_qr` | boolean | `true`                     | Draw a QR code when the value cannot be encoded in the chosen barcode format.                                                           |
 
@@ -87,6 +88,7 @@ When `format: barcode` is set explicitly, the value is validated against the cho
 | `ITF14`   | 13 or 14 digits. A missing check digit is calculated automatically.        |
 | `CODABAR` | Digits and `- . $ : / +`, optionally wrapped in start/stop characters A–D. |
 | `MSI`     | Digits only.                                                               |
+| `PDF417`  | Latin-1 (ISO-8859-1) text, up to roughly 1,000 characters.                 |
 
 If a value cannot be encoded and `fallback_to_qr` is enabled, the popup shows a QR code with a short
 explanation. Set `fallback_to_qr: false` to show the validation error instead.
@@ -164,9 +166,10 @@ by this card. Longer values show a friendly error instead of a broken image.
 | `tests/`                          | Unit tests and DOM smoke tests (Vitest + jsdom)            |
 | `dev/`                            | Standalone demo harness with mocked Home Assistant pieces  |
 
-The card bundles Lit, [`qrcode`](https://github.com/soldair/node-qrcode) and
-[`JsBarcode`](https://github.com/lindell/JsBarcode) into a single ES module. There are no runtime
-network requests.
+The card bundles Lit, [`qrcode`](https://github.com/soldair/node-qrcode),
+[`JsBarcode`](https://github.com/lindell/JsBarcode) and
+[`bwip-js`](https://github.com/metafloor/bwip-js) (PDF417 only) into a single ES module. There are
+no runtime network requests.
 
 ## Development
 

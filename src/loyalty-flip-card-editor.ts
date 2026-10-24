@@ -1,6 +1,11 @@
 import { LitElement, html, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
-import { BARCODE_FORMAT_LABELS, BARCODE_FORMATS, type LoyaltyFlipCardConfig } from './config';
+import {
+  BARCODE_FORMAT_LABELS,
+  BARCODE_FORMATS,
+  DEFAULT_CONFIG,
+  type LoyaltyFlipCardConfig,
+} from './config';
 import type { HaFormSchema, HomeAssistant, LovelaceCardConfig } from './types';
 
 const LABELS: Record<string, string> = {
@@ -9,6 +14,7 @@ const LABELS: Record<string, string> = {
   barcode_format: 'Barcode format',
   title: 'Title',
   subtitle: 'Subtitle',
+  show_icon: 'Show icon or logo',
   icon: 'Icon',
   logo: 'Logo URL',
   color: 'Accent color',
@@ -25,7 +31,17 @@ const HELPERS: Record<string, string> = {
   format:
     'Auto-detect uses EAN/UPC for 8, 12, 13 or 14 digit codes with a valid check digit, and a QR code otherwise.',
   fallback_to_qr: 'Show a QR code when the value cannot be encoded as the selected barcode format.',
+  barcode_height: 'Ignored for PDF417, whose height follows the number of rows.',
+  barcode_width: 'For PDF417 this sets the size of one module.',
+  title: 'Leave empty to show only the logo or icon, centered on the card.',
   logo: 'Use a URL that Home Assistant can reach, for example /local/my-logo.png.',
+};
+
+// ha-form renders a missing boolean as off, so show the effective defaults.
+const BOOLEAN_DEFAULTS = {
+  show_icon: DEFAULT_CONFIG.show_icon,
+  show_code_text: DEFAULT_CONFIG.show_code_text,
+  fallback_to_qr: DEFAULT_CONFIG.fallback_to_qr,
 };
 
 export class LoyaltyFlipCardEditor extends LitElement {
@@ -44,7 +60,7 @@ export class LoyaltyFlipCardEditor extends LitElement {
     return html`
       <ha-form
         .hass=${this.hass}
-        .data=${config}
+        .data=${{ ...BOOLEAN_DEFAULTS, ...config }}
         .schema=${this._buildSchema(config)}
         .computeLabel=${this._computeLabel}
         .computeHelper=${this._computeHelper}
@@ -93,8 +109,13 @@ export class LoyaltyFlipCardEditor extends LitElement {
         : []),
       { name: 'title', selector: { text: {} } },
       { name: 'subtitle', selector: { text: {} } },
-      { name: 'icon', selector: { icon: {} } },
-      { name: 'logo', selector: { text: {} } },
+      { name: 'show_icon', selector: { boolean: {} } },
+      ...(config.show_icon !== false
+        ? [
+            { name: 'icon', selector: { icon: {} } },
+            { name: 'logo', selector: { text: {} } },
+          ]
+        : []),
       { name: 'color', selector: { text: {} } },
       { name: 'show_code_text', selector: { boolean: {} } },
       { name: 'popup_title', selector: { text: {} } },

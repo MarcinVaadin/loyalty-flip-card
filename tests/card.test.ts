@@ -24,13 +24,52 @@ afterEach(() => {
 });
 
 describe('loyalty-flip-card', () => {
-  it('renders the configured title, subtitle and hint', async () => {
+  it('renders the configured title and subtitle without hint text', async () => {
     const card = createCard({ code: 'ABC', title: 'Coffee Club', subtitle: 'Member 42' });
     await card.updateComplete;
 
     expect(shadow(card).querySelector('.face__title')?.textContent).toBe('Coffee Club');
     expect(shadow(card).querySelector('.face__subtitle')?.textContent).toBe('Member 42');
-    expect(shadow(card).querySelector('.face__hint')?.textContent).toContain('Tap to show code');
+    expect(shadow(card).querySelector('.face__hint')?.textContent?.trim()).toBe('');
+  });
+
+  it('centers the icon and hides the title when no title is configured', async () => {
+    const card = createCard({ code: 'ABC' });
+    await card.updateComplete;
+
+    const face = shadow(card).querySelector('.face');
+    expect(face?.classList.contains('face--centered')).toBe(true);
+    expect(face?.getAttribute('aria-label')).toBe('Show loyalty code');
+    expect(shadow(card).querySelector('.face__copy')).toBeNull();
+    expect(shadow(card).querySelector('.badge ha-icon')).not.toBeNull();
+    expect(shadow(card).textContent).not.toContain('Loyalty Card');
+
+    const dialog = await open(card);
+    expect(dialog.querySelector('.panel__title')).toBeNull();
+    expect(dialog.getAttribute('aria-label')).toBe('Loyalty code');
+    expect(dialog.hasAttribute('aria-labelledby')).toBe(false);
+  });
+
+  it('hides the icon and logo when show_icon is false', async () => {
+    const card = createCard({
+      code: 'ABC',
+      title: 'Coffee Club',
+      logo: '/local/logo.png',
+      show_icon: false,
+    });
+    await card.updateComplete;
+
+    expect(shadow(card).querySelector('.badge')).toBeNull();
+    expect(shadow(card).querySelector('.face__title')?.textContent).toBe('Coffee Club');
+  });
+
+  it('keeps the standard layout when a title is configured', async () => {
+    const card = createCard({ code: 'ABC', title: 'Coffee Club' });
+    const dialog = await open(card);
+
+    expect(shadow(card).querySelector('.face--centered')).toBeNull();
+    expect(dialog.querySelector('.panel__title')?.textContent).toBe('Coffee Club');
+    expect(dialog.getAttribute('aria-labelledby')).toBe('loyalty-code-title');
   });
 
   it('opens the popup and draws a QR code', async () => {
@@ -100,6 +139,32 @@ describe('loyalty-flip-card', () => {
     expect(svg?.getAttribute('width')).toBeNull();
     expect(svg?.style.width).toMatch(/px$/);
     expect(svg?.getAttribute('preserveAspectRatio')).toBe('xMidYMid meet');
+  });
+
+  it('draws a PDF417 barcode', async () => {
+    const card = createCard({ code: 'LOYALTY-8842', format: 'barcode', barcode_format: 'PDF417' });
+    await open(card);
+
+    await vi.waitFor(() => {
+      expect(shadow(card).querySelector('svg.barcode[aria-label="PDF417 barcode"]')).not.toBeNull();
+    });
+    expect(shadow(card).querySelector('.note')).toBeNull();
+  });
+
+  it('falls back to QR when a PDF417 value is too long', async () => {
+    const card = createCard({
+      code: 'aB3~'.repeat(275),
+      format: 'barcode',
+      barcode_format: 'PDF417',
+    });
+    await open(card);
+
+    await vi.waitFor(() => {
+      expect(shadow(card).querySelector('.qr svg')).not.toBeNull();
+    });
+    expect(shadow(card).querySelector('.note')?.textContent).toContain(
+      'cannot be encoded as PDF417',
+    );
   });
 
   it('closes via the backdrop and the close button', async () => {

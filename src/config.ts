@@ -12,6 +12,7 @@ export const BARCODE_FORMATS = [
   'ITF14',
   'CODABAR',
   'MSI',
+  'PDF417',
 ] as const;
 export type BarcodeFormat = (typeof BARCODE_FORMATS)[number];
 
@@ -24,6 +25,7 @@ export const BARCODE_FORMAT_LABELS: Record<BarcodeFormat, string> = {
   ITF14: 'ITF-14',
   CODABAR: 'Codabar',
   MSI: 'MSI',
+  PDF417: 'PDF417 (2D stacked)',
 };
 
 export interface LoyaltyFlipCardConfig extends LovelaceCardConfig {
@@ -33,13 +35,16 @@ export interface LoyaltyFlipCardConfig extends LovelaceCardConfig {
   format: CodeFormat;
   /** Symbology used when `format` is `barcode`. */
   barcode_format: BarcodeFormat;
-  title: string;
+  /** Card face title. Without it the face shows only the centered logo or icon. */
+  title?: string;
   subtitle?: string;
+  /** Show the icon or logo on the card face. */
+  show_icon: boolean;
   icon?: string;
   logo?: string;
   color?: string;
   show_code_text: boolean;
-  popup_title: string;
+  popup_title?: string;
   qr_size: number;
   barcode_height: number;
   barcode_width: number;
@@ -50,9 +55,8 @@ export const DEFAULT_CONFIG = {
   code: '',
   format: 'qr',
   barcode_format: 'CODE128',
-  title: 'Loyalty Card',
+  show_icon: true,
   show_code_text: true,
-  popup_title: '',
   qr_size: 320,
   barcode_height: 96,
   barcode_width: 2,
@@ -101,7 +105,7 @@ export function normalizeConfig(input: LovelaceCardConfig): LoyaltyFlipCardConfi
     throw new Error('loyalty-flip-card: configuration must be an object');
   }
 
-  const title = text(input.title) ?? DEFAULT_CONFIG.title;
+  const title = text(input.title);
   const logo = text(input.logo);
 
   return {
@@ -111,6 +115,7 @@ export function normalizeConfig(input: LovelaceCardConfig): LoyaltyFlipCardConfi
     barcode_format: oneOf(BARCODE_FORMATS, input.barcode_format) ?? DEFAULT_CONFIG.barcode_format,
     title,
     subtitle: text(input.subtitle),
+    show_icon: input.show_icon !== false,
     icon: text(input.icon) ?? 'mdi:card-account-details',
     logo,
     color: color(input.color),

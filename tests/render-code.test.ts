@@ -4,6 +4,7 @@ import {
   detectBarcodeFormat,
   isValidGtin,
   normalizeBarcodeValue,
+  renderPdf417Svg,
   renderQrSvg,
   resolveCode,
   validateBarcodeValue,
@@ -123,10 +124,27 @@ describe('validateBarcodeValue', () => {
     expect(validateBarcodeValue('CODABAR', '12345')).toBeUndefined();
     expect(validateBarcodeValue('CODABAR', 'A12345B')).toBeUndefined();
     expect(validateBarcodeValue('CODABAR', '12E45')).toContain('Codabar');
+
+    expect(validateBarcodeValue('PDF417', 'Café 42 / ÅÖ')).toBeUndefined();
+    expect(validateBarcodeValue('PDF417', 'ŁÓDŹ')).toContain('Latin-1');
   });
 
   it('rejects empty values', () => {
     expect(validateBarcodeValue('CODE128', '')).toContain('empty');
+  });
+});
+
+describe('renderPdf417Svg', () => {
+  it('produces a scalable, white-backed SVG at its natural width', () => {
+    const svg = renderPdf417Svg('LOYALTY-8842-9931', 2);
+    expect(svg).toMatch(/^<svg class="barcode" role="img"/);
+    expect(svg).toMatch(/style="width: \d+px"/);
+    expect(svg).toContain('viewBox');
+    expect(svg).toContain('#ffffff');
+  });
+
+  it('throws a readable error for values that are too long', () => {
+    expect(() => renderPdf417Svg('x'.repeat(3000), 2)).toThrow(/^The input data is too long/);
   });
 });
 
