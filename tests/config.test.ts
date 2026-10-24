@@ -58,6 +58,13 @@ describe('normalizeConfig', () => {
     );
   });
 
+  it('keeps code patterns with a <CODE> placeholder verbatim', () => {
+    expect(normalizeConfig({ ...base, code_pattern: ' 1,<CODE>, ' }).code_pattern).toBe(
+      ' 1,<CODE>, ',
+    );
+    expect(normalizeConfig({ ...base, code_pattern: '1,CODE,' }).code_pattern).toBeUndefined();
+  });
+
   it('honors explicit false booleans', () => {
     const config = normalizeConfig({
       ...base,

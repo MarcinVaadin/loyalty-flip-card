@@ -35,6 +35,8 @@ export interface LoyaltyFlipCardConfig extends LovelaceCardConfig {
   format: CodeFormat;
   /** Symbology used when `format` is `barcode`. */
   barcode_format: BarcodeFormat;
+  /** Wraps the code before encoding; `<CODE>` is replaced with `code`. */
+  code_pattern?: string;
   /** Card face title. Without it the face shows only the centered logo or icon. */
   title?: string;
   subtitle?: string;
@@ -63,6 +65,8 @@ export const DEFAULT_CONFIG = {
   fallback_to_qr: true,
 } as const;
 
+export const CODE_PLACEHOLDER = '<CODE>';
+
 const COLOR_PATTERN =
   /^(#[0-9a-f]{3,8}|(?:rgb|hsl)a?\([0-9.,%\s/]+\)|[a-z]+|var\(--[a-z0-9-]+\))$/i;
 
@@ -90,6 +94,11 @@ function integer(value: unknown, fallback: number, min: number, max: number): nu
   return Math.min(max, Math.max(min, Math.round(parsed)));
 }
 
+function codePattern(value: unknown): string | undefined {
+  // Not trimmed: leading/trailing characters may be part of the encoded value.
+  return typeof value === 'string' && value.includes(CODE_PLACEHOLDER) ? value : undefined;
+}
+
 function color(value: unknown): string | undefined {
   const candidate = text(value);
   return candidate && COLOR_PATTERN.test(candidate) ? candidate : undefined;
@@ -113,6 +122,7 @@ export function normalizeConfig(input: LovelaceCardConfig): LoyaltyFlipCardConfi
     code: codeText(input.code),
     format: oneOf(CODE_FORMATS, input.format) ?? DEFAULT_CONFIG.format,
     barcode_format: oneOf(BARCODE_FORMATS, input.barcode_format) ?? DEFAULT_CONFIG.barcode_format,
+    code_pattern: codePattern(input.code_pattern),
     title,
     subtitle: text(input.subtitle),
     show_icon: input.show_icon !== false,

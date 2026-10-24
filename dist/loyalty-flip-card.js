@@ -754,49 +754,53 @@ var rt = ze(nt), it = [
 	barcode_height: 96,
 	barcode_width: 2,
 	fallback_to_qr: !0
-}, ct = /^(#[0-9a-f]{3,8}|(?:rgb|hsl)a?\([0-9.,%\s/]+\)|[a-z]+|var\(--[a-z0-9-]+\))$/i;
-function lt(e) {
+}, ct = "<CODE>", lt = /^(#[0-9a-f]{3,8}|(?:rgb|hsl)a?\([0-9.,%\s/]+\)|[a-z]+|var\(--[a-z0-9-]+\))$/i;
+function ut(e) {
 	if (typeof e != "string") return;
 	let t = e.trim();
 	return t.length > 0 ? t : void 0;
 }
-function ut(e) {
+function dt(e) {
 	return typeof e == "string" ? e.trim() : typeof e == "number" && Number.isFinite(e) ? String(e) : "";
 }
-function dt(e, t) {
+function ft(e, t) {
 	return typeof t == "string" && e.includes(t) ? t : void 0;
 }
-function ft(e, t, n, r) {
+function pt(e, t, n, r) {
 	let i = typeof e == "number" ? e : Number(e);
 	return Number.isFinite(i) ? Math.min(r, Math.max(n, Math.round(i))) : t;
 }
-function pt(e) {
-	let t = lt(e);
-	return t && ct.test(t) ? t : void 0;
-}
 function mt(e) {
+	return typeof e == "string" && e.includes("<CODE>") ? e : void 0;
+}
+function ht(e) {
+	let t = ut(e);
+	return t && lt.test(t) ? t : void 0;
+}
+function gt(e) {
 	if (typeof e != "object" || !e || Array.isArray(e)) throw Error("loyalty-flip-card: configuration must be an object");
-	let t = lt(e.title), n = lt(e.logo);
+	let t = ut(e.title), n = ut(e.logo);
 	return {
 		type: typeof e.type == "string" ? e.type : "custom:loyalty-flip-card",
-		code: ut(e.code),
-		format: dt(it, e.format) ?? st.format,
-		barcode_format: dt(at, e.barcode_format) ?? st.barcode_format,
+		code: dt(e.code),
+		format: ft(it, e.format) ?? st.format,
+		barcode_format: ft(at, e.barcode_format) ?? st.barcode_format,
+		code_pattern: mt(e.code_pattern),
 		title: t,
-		subtitle: lt(e.subtitle),
+		subtitle: ut(e.subtitle),
 		show_icon: e.show_icon !== !1,
-		icon: lt(e.icon) ?? "mdi:card-account-details",
+		icon: ut(e.icon) ?? "mdi:card-account-details",
 		logo: n,
-		color: pt(e.color),
+		color: ht(e.color),
 		show_code_text: e.show_code_text !== !1,
-		popup_title: lt(e.popup_title) ?? t,
-		qr_size: ft(e.qr_size, st.qr_size, 160, 640),
-		barcode_height: ft(e.barcode_height, st.barcode_height, 48, 240),
-		barcode_width: ft(e.barcode_width, st.barcode_width, 1, 4),
+		popup_title: ut(e.popup_title) ?? t,
+		qr_size: pt(e.qr_size, st.qr_size, 160, 640),
+		barcode_height: pt(e.barcode_height, st.barcode_height, 48, 240),
+		barcode_width: pt(e.barcode_width, st.barcode_width, 1, 4),
 		fallback_to_qr: e.fallback_to_qr !== !1
 	};
 }
-function ht(e) {
+function _t(e) {
 	let t = /^#([0-9a-f]{3,8})$/i.exec(e)?.[1];
 	if (t) return t.length === 3 || t.length === 4 ? [
 		Number.parseInt(t[0] + t[0], 16),
@@ -814,8 +818,8 @@ function ht(e) {
 		Number(n[3])
 	];
 }
-function gt(e) {
-	let t = ht(e);
+function vt(e) {
+	let t = _t(e);
 	if (!t) return "#ffffff";
 	let [n, r, i] = t.map((e) => {
 		let t = e / 255;
@@ -824,7 +828,7 @@ function gt(e) {
 	return .2126 * n + .7152 * r + .0722 * i > .45 ? "#111111" : "#ffffff";
 }
 // node_modules/@bwip-js/browser/dist/bwipp.mjs
-var H = null, U = 0, W = [], G = {}, _t = /* @__PURE__ */ new Map(), vt = Math.ceil, yt = Math.floor, bt = Math.log, xt = Math.pow, St = Math.round, Ct = Math.sqrt;
+var H = null, U = 0, W = [], G = {}, yt = /* @__PURE__ */ new Map(), bt = Math.ceil, xt = Math.floor, St = Math.log, Ct = Math.pow, wt = Math.round, Tt = Math.sqrt;
 function K(e) {
 	if (!arguments.length) {
 		for (var t = U - 1; t >= 0 && W[t] !== Infinity; t--);
@@ -838,25 +842,25 @@ function K(e) {
 	}
 	return e.b = e, e.o = 0, e;
 }
-function wt() {
+function Et() {
 	for (var e = U - 1; e >= 0 && W[e] !== Infinity; e -= 2) if (W[e - 1] === Infinity) throw Error("dict-malformed-stack");
 	if (e < 0) throw Error("dict-marker-not-found");
 	for (var t = /* @__PURE__ */ new Map(), n = e + 1; n < U; n += 2) {
 		var r = W[n], i = typeof r;
 		if (i == "number" || i == "string") t.set(r, W[n + 1]);
-		else if (r instanceof Uint8Array) t.set(Dt(r), W[n + 1]);
+		else if (r instanceof Uint8Array) t.set(kt(r), W[n + 1]);
 		else throw Error("dict-not-a-valid-key(" + r + ")");
 	}
 	return U = e, t;
 }
-function Tt(e) {
+function Dt(e) {
 	var t = typeof e;
 	if (t === "number") return new Uint8Array(e);
 	t !== "string" && (e = "" + e);
 	for (var n = new Uint8Array(e.length), r = 0, i = e.length; r < i; r++) n[r] = e.charCodeAt(r);
 	return n;
 }
-function Et(e, t) {
+function Ot(e, t) {
 	if (U < e) throw Error("roll: --stack-underflow--");
 	if (t) {
 		if (t < 0) var n = W.splice(U - e, -t);
@@ -864,42 +868,42 @@ function Et(e, t) {
 		W.splice.apply(W, [U - n.length, 0].concat(n));
 	}
 }
-function Dt(e) {
+function kt(e) {
 	return e instanceof Uint8Array ? String.fromCharCode.apply(null, e) : "" + e;
 }
-function Ot(e, t) {
-	if (typeof e == "string" && (e = Tt(e)), t instanceof Uint8Array) for (var n = 0, r = t.length; n < r; n++) e[n] = t[n];
+function At(e, t) {
+	if (typeof e == "string" && (e = Dt(e)), t instanceof Uint8Array) for (var n = 0, r = t.length; n < r; n++) e[n] = t[n];
 	else for (var n = 0, r = t.length; n < r; n++) e[n] = t.charCodeAt(n);
 	return t.length < e.length ? e.subarray(0, t.length) : e;
 }
-function kt(e, t) {
+function jt(e, t) {
 	var n = typeof t;
 	n == "number" || n == "boolean" || t === null ? t = "" + t : n !== "string" && (t = "--nostringval--");
 	for (var r = 0, i = t.length; r < i; r++) e[r] = t.charCodeAt(r);
 	return r < e.length ? e.subarray(0, r) : e;
 }
-function At(e) {
-	return e instanceof Uint8Array ? yt(String.fromCharCode.apply(null, e).replace(/\0+$/, "")) : yt("" + e);
+function Mt(e) {
+	return e instanceof Uint8Array ? xt(String.fromCharCode.apply(null, e).replace(/\0+$/, "")) : xt("" + e);
 }
-function jt(e, t, n) {
-	return Ot(e, (~~t).toString(n).toUpperCase());
+function Nt(e, t, n) {
+	return At(e, (~~t).toString(n).toUpperCase());
 }
 function q(e, t) {
-	return e instanceof Uint8Array ? e[t] : typeof e == "string" ? e.charCodeAt(t) : e instanceof Array ? e.b[e.o + t] : (t instanceof Uint8Array && (t = Dt(t)), e instanceof Map ? e.get(t) : e[t]);
+	return e instanceof Uint8Array ? e[t] : typeof e == "string" ? e.charCodeAt(t) : e instanceof Array ? e.b[e.o + t] : (t instanceof Uint8Array && (t = kt(t)), e instanceof Map ? e.get(t) : e[t]);
 }
-function Mt(e, t) {
-	return e instanceof Uint8Array || typeof e == "string" || e instanceof Array ? t < e.length : (t instanceof Uint8Array && (t = Dt(t)), e instanceof Map ? e.has(t) : t in e);
+function Pt(e, t) {
+	return e instanceof Uint8Array || typeof e == "string" || e instanceof Array ? t < e.length : (t instanceof Uint8Array && (t = kt(t)), e instanceof Map ? e.has(t) : t in e);
 }
-function Nt(e, t) {
-	if (e instanceof Map) t instanceof Uint8Array ? e.delete(Dt(t)) : e.delete(t);
-	else if (typeof e == "object") t instanceof Uint8Array ? delete e[Dt(t)] : delete e[t];
+function Ft(e, t) {
+	if (e instanceof Map) t instanceof Uint8Array ? e.delete(kt(t)) : e.delete(t);
+	else if (typeof e == "object") t instanceof Uint8Array ? delete e[kt(t)] : delete e[t];
 	else throw Error("undef-not-a-dict-" + typeof e);
 }
 function J(e, t, n) {
 	if (e instanceof Uint8Array) e[t] = n;
 	else if (e instanceof Array) e.b[e.o + t] = n;
-	else if (e instanceof Map) t instanceof Uint8Array ? e.set(Dt(t), n) : e.set(t, n);
-	else if (typeof e == "object") t instanceof Uint8Array ? e[Dt(t)] = n : e[t] = n;
+	else if (e instanceof Map) t instanceof Uint8Array ? e.set(kt(t), n) : e.set(t, n);
+	else if (typeof e == "object") t instanceof Uint8Array ? e[kt(t)] = n : e[t] = n;
 	else throw Error("put-not-writable-" + typeof e);
 }
 function Y(e, t, n) {
@@ -917,23 +921,23 @@ function X(e, t, n) {
 	} else if (e instanceof Array) for (var a = e.b, o = t + e.o, s = n.b, c = n.o, r = 0, i = n.length; r < i; r++) a[o + r] = s[c + r];
 	else throw Error("putinterval-not-writable-" + typeof e);
 }
-function Pt() {
+function It() {
 	for (var e = W[--U], t = e.keys(), n = 0, r = e.size; n < r; n++) {
 		var i = t.next().value;
 		i && typeof i == "string" && (G[i] = e.get(i));
 	}
 }
-function Ft(e) {
+function Lt(e) {
 	if (e == null) return "nulltype";
 	var t = typeof e;
 	return t == "number" ? isFinite(e) ? e % 1 ? "realtype" : "integertype" : "marktype" : t == "boolean" ? "booleantype" : t == "string" || e instanceof Uint8Array ? "stringtype" : t == "function" ? "operatortype" : e instanceof Array ? "arraytype" : "dicttype";
 }
-function It(e, t) {
-	e instanceof Uint8Array || (e = Tt(e));
+function Rt(e, t) {
+	e instanceof Uint8Array || (e = Dt(e));
 	var n = e.length;
 	if (t.length == 1) for (var r = 1, i = t instanceof Uint8Array ? t[0] : t.charCodeAt(0), a = 0; a < n && e[a] != i; a++);
 	else {
-		t instanceof Uint8Array || (t = Tt(t));
+		t instanceof Uint8Array || (t = Dt(t));
 		for (var r = t.length, i = t[0], a = 0; a < n && e[a] != i; a++);
 		for (; a < n;) {
 			for (var o = 1; o < r && e[a + o] === t[o]; o++);
@@ -943,7 +947,7 @@ function It(e, t) {
 	}
 	a < n ? (W[U++] = e.subarray(a + r), W[U++] = e.subarray(a, a + r), W[U++] = e.subarray(0, a), W[U++] = !0) : (W[U++] = e, W[U++] = !1);
 }
-function Lt(e, t) {
+function zt(e, t) {
 	if (e instanceof Uint8Array) for (var n = 0, r = e.length; n < r && (W[U++] = e[n], !(t && t())); n++);
 	else if (e instanceof Array) for (var i = e.b, n = e.o, r = e.o + e.length; n < r && (W[U++] = i[n], !(t && t())); n++);
 	else if (typeof e == "string") for (var n = 0, r = e.length; n < r && (W[U++] = e.charCodeAt(n), !(t && t())); n++);
@@ -953,40 +957,40 @@ function Lt(e, t) {
 	}
 	else for (var o in e) if (W[U++] = o, W[U++] = e[o], t && t()) break;
 }
-function Rt() {
+function Bt() {
 	for (var e = U - 1; e >= 0 && W[e] !== Infinity; e--);
 	return U - e - 1;
 }
 function Z(e) {
 	for (var t = 0, n = e.length, r = e.b, i = e.o; t < n; t++) W[U++] = r[i + t];
 }
-function zt(e) {
+function Vt(e) {
 	for (var t = 0, n = e.length, r = e.b, i = e.o + n - 1; t < n; t++) r[i - t] = W[--U];
 	W[U++] = e;
 }
-function Bt(e, t) {
+function Ht(e, t) {
 	if (typeof e == "string" && typeof t == "string") return e == t;
 	if (e instanceof Uint8Array && t instanceof Uint8Array) {
 		if (e.length != t.length) return !1;
 		for (var n = 0, r = e.length; n < r; n++) if (e[n] != t[n]) return !1;
 		return !0;
 	}
-	return (e instanceof Uint8Array && typeof t == "string" || t instanceof Uint8Array && typeof e == "string") && (e instanceof Uint8Array ? e = Dt(e) : t = Dt(t)), e == t;
+	return (e instanceof Uint8Array && typeof t == "string" || t instanceof Uint8Array && typeof e == "string") && (e instanceof Uint8Array ? e = kt(e) : t = kt(t)), e == t;
 }
-function Vt(e, t) {
-	return !Bt(e, t);
+function Ut(e, t) {
+	return !Ht(e, t);
 }
-function Ht(e, t) {
-	return e instanceof Uint8Array && (e = Dt(e)), t instanceof Uint8Array && (t = Dt(t)), e < t;
+function Wt(e, t) {
+	return e instanceof Uint8Array && (e = kt(e)), t instanceof Uint8Array && (t = kt(t)), e < t;
 }
 var Q = (function(e) {
 	return (t) => (t | 0) == t ? t : (e[0] = t, e[0]);
 })(/* @__PURE__ */ new Float32Array(1));
 function $() {
 	var e = W[--U], t = W[--U];
-	throw _t.set("errorname", t), _t.set("errorinfo", e), typeof e == "string" || e instanceof Uint8Array ? Error(Dt(t) + ": " + Dt(e)) : Dt(t);
+	throw yt.set("errorname", t), yt.set("errorinfo", e), typeof e == "string" || e instanceof Uint8Array ? Error(kt(t) + ": " + kt(e)) : kt(t);
 }
-var Ut = /* @__PURE__ */ new Map([
+var Gt = /* @__PURE__ */ new Map([
 	["", ""],
 	["subspace", ""],
 	["split", ""],
@@ -1001,14 +1005,14 @@ var Ut = /* @__PURE__ */ new Map([
 	["yoffset", 0],
 	["gaps", 0]
 ]);
-function Wt() {
-	for (var e = 1; e <= 9; e++) for (var t = Ut, n = t.keys(), r = 0, i = t.size; r < i; r++) {
+function Kt() {
+	for (var e = 1; e <= 9; e++) for (var t = Gt, n = t.keys(), r = 0, i = t.size; r < i; r++) {
 		var a = n.next().value;
 		G["text" + e + a] = t.get(a);
 	}
 }
-function Gt() {
-	for (var e = K(9), t = Ut, n = 1; n <= 9; n++) {
+function qt() {
+	for (var e = K(9), t = Gt, n = 1; n <= 9; n++) {
 		for (var r = /* @__PURE__ */ new Map(), i = "text" + n, a = t.keys(), o = 0, s = t.size; o < s; o++) {
 			var c = a.next().value;
 			r.set(c, G[i + c]);
@@ -1017,7 +1021,7 @@ function Gt() {
 	}
 	W[U++] = e;
 }
-var Kt = {
+var Jt = {
 	alttext: "text1",
 	alttextsubspace: "text1subspace",
 	alttextsplit: "text1split",
@@ -1047,9 +1051,9 @@ var Kt = {
 	extratextyoffset: "text2yoffset",
 	extratextgaps: "text2gaps"
 };
-function qt() {
+function Yt() {
 	var e = W[--U], t = W[U - 1];
-	if (t instanceof Uint8Array && (t = Dt(t)), typeof t == "string") {
+	if (t instanceof Uint8Array && (t = kt(t)), typeof t == "string") {
 		let e = t.trim().split(/ +/g);
 		W[U - 1] = t = /* @__PURE__ */ new Map();
 		for (let n = 0; n < e.length; n++) {
@@ -1061,7 +1065,7 @@ function qt() {
 	if (t.has("extratext") && t.has("text2")) throw Error("bwipp.invalidTextOptions: extratext and text2 are mutually exclusive");
 	for (var n = t.keys(), r = 0, i = t.size; r < i; r++) {
 		var a = n.next().value;
-		e && e[a] ? t.set(e[a], t.get(a)) : Kt[a] && (t.set(Kt[a], t.get(a)), /^(?:alt|extra)text/.test(a) && t.delete(a));
+		e && e[a] ? t.set(e[a], t.get(a)) : Jt[a] && (t.set(Jt[a], t.get(a)), /^(?:alt|extra)text/.test(a) && t.delete(a));
 	}
 	for (var a in G) if (t.has(a)) {
 		var o = t.get(a), s = G[a], c = typeof s;
@@ -1078,7 +1082,7 @@ function qt() {
 			}
 		} else if (c == "string" || s instanceof Uint8Array) {
 			if (typeof o == "number") o = "" + o, t.set(a, o);
-			else if (/^text\d$/.test(a) && typeof o == "string") o = Tt(o), t.set(a, o);
+			else if (/^text\d$/.test(a) && typeof o == "string") o = Dt(o), t.set(a, o);
 			else if (typeof o != "string" && !(o instanceof Uint8Array)) throw Error("bwipp.invalidOptionType: " + a + ": not a stringtype: " + o);
 		} else if (Object.prototype.toString.call(o) !== Object.prototype.toString.call(s)) {
 			var l = /\[object (\w+)\]/.exec(Object.prototype.toString.call(s)) || [, "unknown"];
@@ -1087,7 +1091,7 @@ function qt() {
 		G[a] = o;
 	}
 }
-function Jt() {
+function Xt() {
 	var e = {
 		limit: W[--U],
 		max: W[--U],
@@ -1099,12 +1103,12 @@ function Jt() {
 			total: 0
 		},
 		fetch() {
-			W[U++] = e, Yt();
+			W[U++] = e, Zt();
 		}
 	};
 	W[U++] = e;
 }
-function Yt() {
+function Zt() {
 	var e = W[--U], t = W[--U], n = W[--U], r = W[--U];
 	r instanceof Uint8Array && (r = String.fromCharCode.apply(null, r));
 	var i = e.cache;
@@ -1125,28 +1129,28 @@ function Yt() {
 		W[U++] = c;
 	}
 }
-function Xt() {
-	if (!Xt.globals) {
+function Qt() {
+	if (!Qt.globals) {
 		var e = G;
-		G = Xt.globals = {}, W[U++] = Infinity;
+		G = Qt.globals = {}, W[U++] = Infinity;
 		var t = K(/* @__PURE__ */ "NUL.SOH.STX.ETX.EOT.ENQ.ACK.BEL.BS.TAB.LF.VT.FF.CR...DLE.DC1.DC2.DC3.DC4.NAK.SYN.ETB.CAN.EM.SUB.ESC.FS.GS.RS.US".split("."));
 		W[U++] = 0;
 		for (var n = 0, r = t.length; n < r; n++) {
 			var i = q(t, n), a = W[--U];
 			W[U++] = i, W[U++] = a, W[U++] = a + 1;
 		}
-		U--, G.ctrl = wt(), G = e;
+		U--, G.ctrl = Et(), G = e;
 	}
 	var e = G;
-	G = Object.assign({}, G, Xt.globals);
+	G = Object.assign({}, G, Qt.globals);
 	var o = W[--U];
 	G.fncvals = o;
 	var s = W[--U];
-	for (G.barcode = s, G.parse = q(G.fncvals, "parse"), Nt(G.fncvals, "parse"), G.parsefnc = q(G.fncvals, "parsefnc"), Nt(G.fncvals, "parsefnc"), G.parseonly = Mt(G.fncvals, "parseonly"), Nt(G.fncvals, "parseonly"), G.eci = Mt(G.fncvals, "eci"), Nt(G.fncvals, "eci"), G.msg = K(G.barcode.length), G.j = 0, W[U++] = G.barcode;;) {
+	for (G.barcode = s, G.parse = q(G.fncvals, "parse"), Ft(G.fncvals, "parse"), G.parsefnc = q(G.fncvals, "parsefnc"), Ft(G.fncvals, "parsefnc"), G.parseonly = Pt(G.fncvals, "parseonly"), Ft(G.fncvals, "parseonly"), G.eci = Pt(G.fncvals, "eci"), Ft(G.fncvals, "eci"), G.msg = K(G.barcode.length), G.j = 0, W[U++] = G.barcode;;) {
 		var c = W[--U];
-		It(c, "^");
+		Rt(c, "^");
 		var l = W[--U], u = W[--U], d = u.length, f = G.msg, p = G.j;
-		if (W[U++] = Infinity, Lt(u), X(f, p, K()), G.j = Q(d + G.j), l) {
+		if (W[U++] = Infinity, zt(u), X(f, p, K()), G.j = Q(d + G.j), l) {
 			U--;
 			for (var m = 0; m < 1; m++) {
 				if (!G.parse && !G.parsefnc) {
@@ -1155,7 +1159,7 @@ function Xt() {
 				}
 				if (J(G.msg, G.j, 94), G.j += 1, G.parse) {
 					if (W[U - 1].length >= 3) {
-						var h = W[U - 1], g = Y(h, 0, 3), _ = G.ctrl, v = Mt(_, g);
+						var h = W[U - 1], g = Y(h, 0, 3), _ = G.ctrl, v = Pt(_, g);
 						if (W[U++] = _, W[U++] = g, v) {
 							--G.j;
 							var y = W[--U], b = W[--U];
@@ -1167,7 +1171,7 @@ function Xt() {
 						U -= 2;
 					}
 					if (W[U - 1].length >= 2) {
-						var S = W[U - 1], C = Y(S, 0, 2), w = G.ctrl, T = Mt(w, C);
+						var S = W[U - 1], C = Y(S, 0, 2), w = G.ctrl, T = Pt(w, C);
 						if (W[U++] = w, W[U++] = C, T) {
 							--G.j;
 							var E = W[--U], D = W[--U];
@@ -1186,7 +1190,7 @@ function Xt() {
 							(N < 48 || N > 57) && (W[U - 1] = !1);
 						}
 						if (W[--U]) {
-							var P = W[U - 1], ee = At(Y(P, 0, 3));
+							var P = W[U - 1], ee = Mt(Y(P, 0, 3));
 							W[U++] = ee, ee > 255 && (U -= 2, W[U++] = "bwipp.invalidOrdinal#521", W[U++] = "Ordinal must be 000 to 255", $()), --G.j;
 							var te = W[--U];
 							J(G.msg, G.j, te), G.j += 1;
@@ -1206,7 +1210,7 @@ function Xt() {
 				}
 				W[U - 1].length < 3 && (W[U - 1] = "bwipp.truncatedFNC#550", W[U++] = "Function character truncated", $());
 				var re = W[U - 1];
-				if (Bt(Y(re, 0, 3), "ECI") && G.eci) {
+				if (Ht(Y(re, 0, 3), "ECI") && G.eci) {
 					W[U - 1].length < 9 && (W[U - 1] = "bwipp.truncatedECI#555", W[U++] = "ECI truncated", $());
 					var ie = W[U - 1], L = Y(ie, 3, 6);
 					W[U++] = L;
@@ -1215,7 +1219,7 @@ function Xt() {
 						(oe < 48 || oe > 57) && (U -= 2, W[U++] = "bwipp.invalidECI#561", W[U++] = "ECI must be 000000 to 999999", $());
 					}
 					var se = W[--U], ce = 0;
-					Lt(se, function() {
+					zt(se, function() {
 						var e = W[--U];
 						ce = Q(ce - (e - 48)) * 10;
 					}), J(G.msg, G.j, ~~(ce / 10) - 1e6), G.j += 1;
@@ -1224,9 +1228,9 @@ function Xt() {
 					break;
 				}
 				W[U - 1].length < 4 && (W[U - 1] = "bwipp.truncatedFNC#572", W[U++] = "Function character truncated", $());
-				var ue = W[U - 1], z = Y(ue, 0, 4), de = Mt(G.fncvals, z);
+				var ue = W[U - 1], z = Y(ue, 0, 4), de = Pt(G.fncvals, z);
 				if (W[U++] = z, !de) {
-					var fe = W[--U], pe = Tt(fe.length + 28);
+					var fe = W[--U], pe = Dt(fe.length + 28);
 					X(pe, 28, fe), X(pe, 0, "Unknown function character: "), W[U - 1] = "bwipp.unknownFNC#578", W[U++] = pe, $();
 				}
 				var B = W[--U];
@@ -1239,7 +1243,7 @@ function Xt() {
 	}
 	if (!G.parseonly) W[U++] = Y(G.msg, 0, G.j);
 	else {
-		W[U++] = Tt(G.j);
+		W[U++] = Dt(G.j);
 		for (var V = 0, he = G.j - 1; V <= he; V += 1) {
 			var ge = W[U - 1];
 			J(ge, V, q(G.msg, V));
@@ -1247,13 +1251,13 @@ function Xt() {
 	}
 	G = e;
 }
-function Zt() {
-	if (!Zt.globals) {
+function $t() {
+	if (!$t.globals) {
 		var e = G;
-		G = Zt.globals = {}, G = e;
+		G = $t.globals = {}, G = e;
 	}
 	var e = G;
-	G = Object.assign({}, G, Zt.globals);
+	G = Object.assign({}, G, $t.globals);
 	var t = W[--U];
 	G.p = t;
 	var n = W[--U];
@@ -1279,10 +1283,10 @@ function Zt() {
 	}
 	G = e;
 }
-function Qt() {
-	if (!Qt.globals) {
+function en() {
+	if (!en.globals) {
 		var e = G;
-		G = Qt.globals = {}, G.pharmacode2_base3sub = K([
+		G = en.globals = {}, G.pharmacode2_base3sub = K([
 			3,
 			1,
 			2
@@ -1297,15 +1301,15 @@ function Qt() {
 		]), G = e;
 	}
 	var e = G;
-	G = Object.assign({}, G, Qt.globals), G.dontdraw = !1, G.includetext = !1, G.height = -1, G.width = 0, G.modunit = 1, W[U++] = null, qt();
+	G = Object.assign({}, G, en.globals), G.dontdraw = !1, G.includetext = !1, G.height = -1, G.width = 0, G.modunit = 1, W[U++] = null, Yt();
 	var t = W[--U];
 	G.options = t;
 	var n = W[--U];
-	G.barcode = n, G._render = !(G.dontdraw || G.bwipp_dontdraw), (G.barcode.length < 1 || G.barcode.length > 8) && (W[U++] = "bwipp.pharmacode2BadLength#14329", W[U++] = "Two-track Pharmacode must be 1 to 6 digits", $()), Lt(G.barcode, function() {
+	G.barcode = n, G._render = !(G.dontdraw || G.bwipp_dontdraw), (G.barcode.length < 1 || G.barcode.length > 8) && (W[U++] = "bwipp.pharmacode2BadLength#14329", W[U++] = "Two-track Pharmacode must be 1 to 6 digits", $()), zt(G.barcode, function() {
 		var e = W[--U];
 		(e < 48 || e > 57) && (W[U++] = "bwipp.pharmacode2badCharacter#14333", W[U++] = "Two-track Pharmacode must contain only digits", $());
 	});
-	var r = At(G.barcode);
+	var r = Mt(G.barcode);
 	(r < 4 || r > 64570080) && (W[U++] = "bwipp.pharmacode2badValue#14337", W[U++] = "Two-track Pharmacode value must be between 4 and 64570080", $()), G.height == -1 && (G.height = 4), G.txt = K(G.barcode.length);
 	for (var i = 0, a = G.barcode.length - 1; i <= a; i += 1) G.i = i, J(G.txt, G.i, K([
 		Y(G.barcode, G.i, 1),
@@ -1314,7 +1318,7 @@ function Qt() {
 		"",
 		0
 	]));
-	for (G.encstr = Tt(16), G.sbs = K(32), G.bar = 1 / 25.4 * G.height, G.spc = 1 / 25.4 * 72, G.i = 15, G.val = At(G.barcode); G.val != 0;) {
+	for (G.encstr = Dt(16), G.sbs = K(32), G.bar = 1 / 25.4 * G.height, G.spc = 1 / 25.4 * 72, G.i = 15, G.val = Mt(G.barcode); G.val != 0;) {
 		var o = G.val % 3;
 		G.val = ~~(Q(G.val - q(G.pharmacode2_base3sub, o)) / 3), J(G.encstr, G.i, q(G.pharmacode2_base3map, o)), --G.i;
 	}
@@ -1331,13 +1335,13 @@ function Qt() {
 	W[U++] = Infinity;
 	for (var u = G.bhs, d = G.bbs, f = [], p = 0, m = G.encstr.length * 2; p < m; p++) f[p] = G.spc;
 	f = K(f), W[U++] = "ren", W[U++] = "renlinear", W[U++] = "bhs", W[U++] = u, W[U++] = "bbs", W[U++] = d, W[U++] = "sbs", W[U++] = f, W[U++] = "txt", W[U++] = G.txt, W[U++] = "text1xalign", W[U++] = "center", W[U++] = "text1yoffset", W[U++] = -4, W[U++] = "opt", W[U++] = G.options;
-	var h = wt();
-	W[U++] = h, G._render && nn(), G = e;
+	var h = Et();
+	W[U++] = h, G._render && an(), G = e;
 }
-function $t() {
-	if (!$t.globals) {
+function tn() {
+	if (!tn.globals) {
 		var e = G;
-		G = $t.globals = {}, G.pdf417_t = 0, G.pdf417_n = 1, G.pdf417_b = 2, G.pdf417_a = 0, G.pdf417_l = 1, G.pdf417_m = 2, G.pdf417_p = 3, G.pdf417_tl = -1, G.pdf417_nl = -2, G.pdf417_bl = -3, G.pdf417_bl6 = -4, G.pdf417_bs = -5, G.pdf417_al = -6, G.pdf417_ll = -7, G.pdf417_ml = -8, G.pdf417_pl = -9, G.pdf417_as = -10, G.pdf417_ps = -11, G.al = G.pdf417_al, G.ll = G.pdf417_ll, G.ml = G.pdf417_ml, G.pl = G.pdf417_pl, G.as = G.pdf417_as, G.ps = G.pdf417_ps, G.pdf417_textsubmodes = K([
+		G = tn.globals = {}, G.pdf417_t = 0, G.pdf417_n = 1, G.pdf417_b = 2, G.pdf417_a = 0, G.pdf417_l = 1, G.pdf417_m = 2, G.pdf417_p = 3, G.pdf417_tl = -1, G.pdf417_nl = -2, G.pdf417_bl = -3, G.pdf417_bl6 = -4, G.pdf417_bs = -5, G.pdf417_al = -6, G.pdf417_ll = -7, G.pdf417_ml = -8, G.pdf417_pl = -9, G.pdf417_as = -10, G.pdf417_ps = -11, G.al = G.pdf417_al, G.ll = G.pdf417_ll, G.ml = G.pdf417_ml, G.pl = G.pdf417_pl, G.as = G.pdf417_as, G.ps = G.pdf417_ps, G.pdf417_textsubmodes = K([
 			G.pdf417_a,
 			G.pdf417_l,
 			G.pdf417_m,
@@ -1599,7 +1603,7 @@ function $t() {
 				G.e
 			])
 		]), W[U++] = Infinity, W[U++] = G.pdf417_tl, W[U++] = 900, W[U++] = G.pdf417_bl, W[U++] = 901, W[U++] = G.pdf417_bl6, W[U++] = 924, W[U++] = G.pdf417_nl, W[U++] = 902, W[U++] = G.pdf417_bs, W[U++] = 913;
-		var t = wt();
+		var t = Et();
 		G.pdf417_latchcws = t, G.pdf417_textencfuncs = K([
 			"enca",
 			"encl",
@@ -4433,7 +4437,7 @@ function $t() {
 				J(b, y, 929 - q(b, y));
 			}
 			W[U++] = G.coeffs;
-		}, G.pdf417_coeffscachemax = 9, G.pdf417_coeffscachelimit = 1022, W[U++] = G.pdf417_coeffscachemax, W[U++] = G.pdf417_coeffscachelimit, Jt();
+		}, G.pdf417_coeffscachemax = 9, G.pdf417_coeffscachelimit = 1022, W[U++] = G.pdf417_coeffscachemax, W[U++] = G.pdf417_coeffscachelimit, Xt();
 		var n = W[--U];
 		G.pdf417_coeffscache = n, G.pdf417_coeffscachefetch = function() {
 			var e = W[--U];
@@ -4456,7 +4460,7 @@ function $t() {
 			for (var a = 0; a <= 3; a += 1) {
 				G.j = a;
 				var o = q(G.encs, G.j);
-				Bt(Ft(o), "stringtype") && (o = q(o, 0)), J(q(G.charvals, G.j), o, G.i), J(G.alltext, o, -1);
+				Ht(Lt(o), "stringtype") && (o = q(o, 0)), J(q(G.charvals, G.j), o, G.i), J(G.alltext, o, -1);
 			}
 		}
 		G.charvals = G.charvals, G.alltext = G.alltext, W[U++] = Infinity, W[U++] = 1;
@@ -4470,7 +4474,7 @@ function $t() {
 		G.rslog = G.rslog, G = e;
 	}
 	var e = G;
-	G = Object.assign({}, G, $t.globals), G.dontdraw = !1, G.compact = !1, G.eclevel = -1, G.fixedeclevel = !1, G.columns = 0, G.rows = 0, G.rowmult = 3, G.ccc = !1, G.raw = !1, G.parse = !1, G.parsefnc = !1, G.modunit = 1, W[U++] = null, qt();
+	G = Object.assign({}, G, tn.globals), G.dontdraw = !1, G.compact = !1, G.eclevel = -1, G.fixedeclevel = !1, G.columns = 0, G.rows = 0, G.rowmult = 3, G.ccc = !1, G.raw = !1, G.parse = !1, G.parsefnc = !1, G.modunit = 1, W[U++] = null, Yt();
 	var d = W[--U];
 	G.options = d;
 	var f = W[--U];
@@ -4487,7 +4491,7 @@ function $t() {
 				break;
 			}
 			var _ = W[--U];
-			G.cw = At(_), G.cw > 928 && (W[U++] = "bwipp.pdf417badRawCodeword#22828", W[U++] = "Raw codewords must be 0 to 928", $()), J(G.datcws, G.j, G.cw), G.i += 4, G.j += 1;
+			G.cw = Mt(_), G.cw > 928 && (W[U++] = "bwipp.pdf417badRawCodeword#22828", W[U++] = "Raw codewords must be 0 to 928", $()), J(G.datcws, G.j, G.cw), G.i += 4, G.j += 1;
 		}
 		G.i != G.barcode.length && (W[U++] = "bwipp.pdf417badRawFormat#22835", W[U++] = "Raw codewords must be formatted as ^NNN", $()), G.datcws = Y(G.datcws, 0, G.j);
 	}
@@ -4527,7 +4531,7 @@ function $t() {
 	}, G.ccc) {
 		G.barlen = G.barcode.length, G.datcws = K(~~(G.barlen / 6) * 5 + G.barlen % 6 + 2), J(G.datcws, 0, 920);
 		var v = G.barlen % 6 == 0 ? 924 : 901;
-		J(G.datcws, 1, v), W[U++] = G.datcws, W[U++] = 2, W[U++] = Infinity, Lt(G.barcode);
+		J(G.datcws, 1, v), W[U++] = G.datcws, W[U++] = 2, W[U++] = Infinity, zt(G.barcode);
 		var y = K();
 		W[U++] = y, G.encb();
 		var b = W[--U], x = W[--U], S = W[--U];
@@ -4538,7 +4542,7 @@ function $t() {
 			["parse", G.parse],
 			["parsefnc", G.parsefnc],
 			["eci", !0]
-		]), W[U++] = G.barcode, W[U++] = G.fncvals, Xt();
+		]), W[U++] = G.barcode, W[U++] = G.fncvals, Qt();
 		var C = W[--U];
 		G.msg = C, G.msglen = G.msg.length, G.msglen > 2713 && (W[U++] = "bwipp.pdf417inputTooLong#22902", W[U++] = "The input data is too long", $()), W[U++] = Infinity;
 		for (var w = 0, T = G.msglen; w < T; w++) W[U++] = 0;
@@ -4552,7 +4556,7 @@ function $t() {
 		for (var M = G.msglen - 1; M >= 0; --M) {
 			G.i = M;
 			var N = q(G.msg, G.i);
-			N >= 48 && N <= 57 && J(G.numdigits, G.i, q(G.numdigits, G.i + 1) + 1), Mt(G.alltext, q(G.msg, G.i)) && q(G.numdigits, G.i) < 13 && J(G.numtext, G.i, q(G.numtext, G.i + 1) + 1), q(G.msg, G.i) >= 0 && q(G.numtext, G.i) < 5 && q(G.numdigits, G.i) < 13 && J(G.numbytes, G.i, q(G.numbytes, G.i + 1) + 1), J(G.iseci, G.i, q(G.msg, G.i) <= -1e6);
+			N >= 48 && N <= 57 && J(G.numdigits, G.i, q(G.numdigits, G.i + 1) + 1), Pt(G.alltext, q(G.msg, G.i)) && q(G.numdigits, G.i) < 13 && J(G.numtext, G.i, q(G.numtext, G.i + 1) + 1), q(G.msg, G.i) >= 0 && q(G.numtext, G.i) < 5 && q(G.numdigits, G.i) < 13 && J(G.numbytes, G.i, q(G.numbytes, G.i + 1) + 1), J(G.iseci, G.i, q(G.msg, G.i) <= -1e6);
 		}
 		for (G.numdigits = Y(G.numdigits, 0, G.msglen), G.numtext = Y(G.numtext, 0, G.msglen), G.numbytes = Y(G.numbytes, 0, G.msglen), W[U++] = Infinity, G.seqlen = 0, G.state = G.pdf417_t, G.p = 0; G.p != G.msglen;) if (q(G.iseci, G.p)) {
 			G.eci = q(G.msg, G.p);
@@ -4576,7 +4580,7 @@ function $t() {
 			var re = K();
 			G.state = G.pdf417_b, G.p = Q(G.p + G.b), G.seqlen = Q(G.seqlen + 1 + G.b), W[U++] = re;
 		}
-		zt(K(Rt()));
+		Vt(K(Bt()));
 		var ie = W[--U];
 		for (U--, G.seq = ie, G.enca = function() {
 			var e = q(G.charvals, G.pdf417_a), t = W[--U];
@@ -4604,13 +4608,13 @@ function $t() {
 				G.pdf417_e,
 				G.pdf417_e,
 				G.pdf417_e
-			]), J(G.curlen, G.submode, 0), Lt(G.in, function() {
+			]), J(G.curlen, G.submode, 0), zt(G.in, function() {
 				var e = W[--U];
 				for (G.char = e;;) {
 					G.imp = !1;
 					for (var t = 0, n = G.pdf417_textsubmodes.length; t < n; t++) {
 						G.x = q(G.pdf417_textsubmodes, t);
-						for (var r = 0, i = G.pdf417_textsubmodes.length; r < i; r++) G.y = q(G.pdf417_textsubmodes, r), G.cost = Q(q(G.curlen, G.x) + q(q(G.pdf417_latlen, G.x), G.y)), G.cost < q(G.curlen, G.y) && (J(G.curlen, G.y, G.cost), G.srclen = q(G.curseqlen, G.x), G.srclen > 0 && X(q(G.curseq, G.y), 0, Y(q(G.curseq, G.x), 0, G.srclen)), Lt(q(q(G.pdf417_latseq, G.x), G.y), function() {
+						for (var r = 0, i = G.pdf417_textsubmodes.length; r < i; r++) G.y = q(G.pdf417_textsubmodes, r), G.cost = Q(q(G.curlen, G.x) + q(q(G.pdf417_latlen, G.x), G.y)), G.cost < q(G.curlen, G.y) && (J(G.curlen, G.y, G.cost), G.srclen = q(G.curseqlen, G.x), G.srclen > 0 && X(q(G.curseq, G.y), 0, Y(q(G.curseq, G.x), 0, G.srclen)), zt(q(q(G.pdf417_latseq, G.x), G.y), function() {
 							W[U++] = q(G.curseq, G.y), W[U++] = G.srclen;
 							var e = W[U - 3], t = W[U - 1], n = W[U - 2];
 							U -= 3, J(n, t, e), G.srclen += 1;
@@ -4624,9 +4628,9 @@ function $t() {
 					G.pdf417_e,
 					G.pdf417_e
 				]), J(G.nxtseqlen, 0, 0), J(G.nxtseqlen, 1, 0), J(G.nxtseqlen, 2, 0), J(G.nxtseqlen, 3, 0);
-				for (var a = 0, o = G.pdf417_textsubmodes.length; a < o; a++) for (G.x = q(G.pdf417_textsubmodes, a); Mt(q(G.charvals, G.x), G.char);) {
+				for (var a = 0, o = G.pdf417_textsubmodes.length; a < o; a++) for (G.x = q(G.pdf417_textsubmodes, a); Pt(q(G.charvals, G.x), G.char);) {
 					G.cost = q(G.curlen, G.x) + 1, G.cost < q(G.nxtlen, G.x) && (J(G.nxtlen, G.x, G.cost), G.srclen = q(G.curseqlen, G.x), G.srclen > 0 && X(q(G.nxtseq, G.x), 0, Y(q(G.curseq, G.x), 0, G.srclen)), J(q(G.nxtseq, G.x), G.srclen, G.char), J(G.nxtseqlen, G.x, G.srclen + 1));
-					for (var s = 0, c = G.pdf417_textsubmodes.length; s < c; s++) if (G.y = q(G.pdf417_textsubmodes, s), Vt(G.x, G.y) && (G.cost = Q(q(G.curlen, G.y) + q(q(G.pdf417_shftlen, G.y), G.x)) + 1, G.cost < q(G.nxtlen, G.y))) {
+					for (var s = 0, c = G.pdf417_textsubmodes.length; s < c; s++) if (G.y = q(G.pdf417_textsubmodes, s), Ut(G.x, G.y) && (G.cost = Q(q(G.curlen, G.y) + q(q(G.pdf417_shftlen, G.y), G.x)) + 1, G.cost < q(G.nxtlen, G.y))) {
 						J(G.nxtlen, G.y, G.cost), G.srclen = q(G.curseqlen, G.y), G.srclen > 0 && X(q(G.nxtseq, G.y), 0, Y(q(G.curseq, G.y), 0, G.srclen));
 						var l = q(G.nxtseq, G.y), u = G.srclen;
 						J(l, u, G.x == G.pdf417_a ? G.pdf417_as : G.pdf417_ps), J(q(G.nxtseq, G.y), G.srclen + 1, G.char), J(G.nxtseqlen, G.y, G.srclen + 2);
@@ -4654,7 +4658,7 @@ function $t() {
 				} else {
 					G.nextecitext = !1;
 					for (var c = G.i + 1, l = G.seq.length - 1; c <= l; c += 1) {
-						if (G.ti = c, Vt(Ft(q(G.seq, G.ti)), "arraytype")) {
+						if (G.ti = c, Ut(Lt(q(G.seq, G.ti)), "arraytype")) {
 							G.nextecitext = !1;
 							break;
 						}
@@ -4663,7 +4667,7 @@ function $t() {
 					}
 					if (G.nextecitext) {
 						if (G.submode == G.pdf417_a) {
-							if (Mt(q(G.charvals, G.pdf417_l), q(q(G.seq, G.ti), 0))) {
+							if (Pt(q(G.charvals, G.pdf417_l), q(q(G.seq, G.ti), 0))) {
 								W[U++] = "pad", W[U++] = G.pdf417_ll, G.enca();
 								var u = W[--U], d = W[--U];
 								G[d] = u, G.submode = G.pdf417_l;
@@ -4673,11 +4677,11 @@ function $t() {
 								G[p] = f, G.submode = G.pdf417_m;
 							}
 						} else if (G.submode == G.pdf417_m) {
-							if (Mt(q(G.charvals, G.pdf417_l), q(q(G.seq, G.ti), 0))) {
+							if (Pt(q(G.charvals, G.pdf417_l), q(q(G.seq, G.ti), 0))) {
 								W[U++] = "pad", W[U++] = G.pdf417_ll, G.encm();
 								var m = W[--U], h = W[--U];
 								G[h] = m, G.submode = G.pdf417_l;
-							} else if (Mt(q(G.charvals, G.pdf417_p), q(q(G.seq, G.ti), 0))) {
+							} else if (Pt(q(G.charvals, G.pdf417_p), q(q(G.seq, G.ti), 0))) {
 								W[U++] = "pad", W[U++] = G.pdf417_pl, G.encm();
 								var g = W[--U], _ = W[--U];
 								G[_] = g, G.submode = G.pdf417_p;
@@ -4715,32 +4719,32 @@ function $t() {
 				for (var o = Y(i, a, r), s = 0, c = o.length; s < c; s++) W[U++] = q(o, s) - 48;
 				for (G.gmod = K(), G.cwn = K(15), G.cwi = 15;;) {
 					for (G.dv = 900, G.val = 0, G.gmulstart = !0, W[U++] = Infinity; G.gmod.length != 0;) G.val = Q(G.val * 10 + q(G.gmod, 0)), G.gmod = Y(G.gmod, 1, G.gmod.length - 1), G.val < G.dv ? G.gmulstart || (W[U++] = 0) : (G.gmulstart = !1, W[U++] = ~~(G.val / G.dv)), G.val %= G.dv;
-					zt(K(Rt()));
+					Vt(K(Bt()));
 					var l = W[--U];
 					if (U--, --G.cwi, J(G.cwn, G.cwi, G.val), G.gmod = l, G.gmod.length == 0) break;
 				}
 				Z(Y(G.cwn, G.cwi, 15 - G.cwi));
 			}
-			zt(K(Rt()));
+			Vt(K(Bt()));
 			var u = W[--U];
 			W[U - 1] = u;
 		}, G.ence = function() {
 			var e = W[--U], t = -q(e, 0) - 1e6;
 			if (W[U++] = t, t <= 899) {
 				var n = W[--U], r = K(2);
-				W[U++] = 927, W[U++] = n, zt(r);
+				W[U++] = 927, W[U++] = n, Vt(r);
 			} else if (W[U - 1] <= 810899) {
 				var i = W[--U], a = K(3);
-				W[U++] = 926, W[U++] = ~~(i / 900) - 1, W[U++] = i % 900, zt(a);
+				W[U++] = 926, W[U++] = ~~(i / 900) - 1, W[U++] = i % 900, Vt(a);
 			} else if (W[U - 1] <= 811799) {
 				var o = W[--U], s = K(2);
-				W[U++] = 925, W[U++] = o - 810900, zt(s);
+				W[U++] = 925, W[U++] = o - 810900, Vt(s);
 			} else W[U - 1] = "bwipp.pdf417badECI#23256", W[U++] = "PDF417 supports ECIs 000000 to 811799", $();
 		}, G.encfuncs = G.pdf417_encfuncs, G.addtocws = function() {
 			var e = W[--U];
 			X(G.datcws, G.j, e), G.j = e.length + G.j;
 		}, G.state = G.pdf417_t, G.submode = G.pdf417_a, G.datcws = K(G.seqlen), G.i = 0, G.j = 0; !(G.i >= G.seq.length);) {
-			if (G.chars = q(G.seq, G.i), Bt(Ft(G.chars), "arraytype")) {
+			if (G.chars = q(G.seq, G.i), Ht(Lt(G.chars), "arraytype")) {
 				if (q(G.chars, 0) <= -1e6) W[U++] = G.chars, G.ence(), G.addtocws();
 				else {
 					var L = G[q(G.encfuncs, G.state)];
@@ -4752,21 +4756,21 @@ function $t() {
 		}
 		G.datcws = Y(G.datcws, 0, G.j);
 	}
-	G.m = G.datcws.length, G.m > 926 && (W[U++] = "bwipp.pdf417dataTooLong#23301", W[U++] = "The data is too long", $()), G.eclevel == -1 && (G.m <= 40 && (G.eclevel = 2), G.m >= 41 && G.m <= 160 && (G.eclevel = 3), G.m >= 161 && G.m <= 320 && (G.eclevel = 4), G.m >= 321 && (G.eclevel = 5)), G.fixedeclevel || (G.maxeclevel = ~~(bt(927 - G.m) / bt(2)) - 1, G.eclevel > G.maxeclevel && (G.eclevel = G.maxeclevel)), G.k = xt(2, G.eclevel + 1), G.columns == 0 && (G.columns = ~~St(Ct(Q(G.m + G.k) / 3)));
+	G.m = G.datcws.length, G.m > 926 && (W[U++] = "bwipp.pdf417dataTooLong#23301", W[U++] = "The data is too long", $()), G.eclevel == -1 && (G.m <= 40 && (G.eclevel = 2), G.m >= 41 && G.m <= 160 && (G.eclevel = 3), G.m >= 161 && G.m <= 320 && (G.eclevel = 4), G.m >= 321 && (G.eclevel = 5)), G.fixedeclevel || (G.maxeclevel = ~~(St(927 - G.m) / St(2)) - 1, G.eclevel > G.maxeclevel && (G.eclevel = G.maxeclevel)), G.k = Ct(2, G.eclevel + 1), G.columns == 0 && (G.columns = ~~wt(Tt(Q(G.m + G.k) / 3)));
 	var ae = G.columns >= 1 ? G.columns : 1;
-	if (G.c = ae, G.r = vt((Q(G.m + G.k) + 1) / G.columns), G.r < G.rows && G.rows <= 90 && (G.r = G.rows), G.r < 3 && (G.r = 3), G.r > 90 && (W[U++] = "bwipp.pdf417insufficientCapacity#23340", W[U++] = "Insufficient capacity in the symbol", $()), !G.fixedeclevel) {
-		var R = G.c, oe = G.r, se = G.m, ce = 8, le = ~~(bt(Q(R * oe - 1 - se)) / bt(2)) - 1;
-		if (~~(bt(Q(R * oe - 1 - se)) / bt(2)) - 1 > 8) {
+	if (G.c = ae, G.r = bt((Q(G.m + G.k) + 1) / G.columns), G.r < G.rows && G.rows <= 90 && (G.r = G.rows), G.r < 3 && (G.r = 3), G.r > 90 && (W[U++] = "bwipp.pdf417insufficientCapacity#23340", W[U++] = "Insufficient capacity in the symbol", $()), !G.fixedeclevel) {
+		var R = G.c, oe = G.r, se = G.m, ce = 8, le = ~~(St(Q(R * oe - 1 - se)) / St(2)) - 1;
+		if (~~(St(Q(R * oe - 1 - se)) / St(2)) - 1 > 8) {
 			var ue = ce;
 			ce = le, le = ue;
 		}
-		G.maxeclevel = le, G.maxeclevel > G.eclevel && (G.eclevel = G.maxeclevel, G.k = xt(2, G.eclevel + 1));
+		G.maxeclevel = le, G.maxeclevel > G.eclevel && (G.eclevel = G.maxeclevel, G.k = Ct(2, G.eclevel + 1));
 	}
 	W[U++] = "coeffs", W[U++] = G.k, G.pdf417_coeffscachefetch();
 	var z = W[--U], de = W[--U];
 	G[de] = z, G.n = Q(G.c * G.r - G.k), G.n > 928 && (W[U++] = "bwipp.pdf417insufficientCapacity#23368", W[U++] = "Insufficient capacity in the symbol", $()), G.cws = K(G.c * G.r), J(G.cws, 0, G.n), X(G.cws, 1, G.datcws);
 	for (var fe = G.cws, pe = G.m + 1, B = [], me = 0, V = Q(G.n - G.m) - 1; me < V; me++) B[me] = 900;
-	if (B = K(B), X(fe, pe, B), Mt(G.options, "debugcws")) {
+	if (B = K(B), X(fe, pe, B), Pt(G.options, "debugcws")) {
 		var he = Y(G.cws, 0, G.n);
 		W[U++] = "bwipp.debugcws#23377", W[U++] = he, $();
 	}
@@ -4774,7 +4778,7 @@ function $t() {
 	if (W[U++] = function() {
 		var e = W[--U];
 		W[U++] = q(G.cws, e);
-	}, W[U++] = ge, W[U++] = _e, W[U++] = ve, W[U++] = ye, W[U++] = 929, Zt(), Mt(G.options, "debugecc")) {
+	}, W[U++] = ge, W[U++] = _e, W[U++] = ve, W[U++] = ye, W[U++] = 929, $t(), Pt(G.options, "debugecc")) {
 		var be = Y(G.cws, G.n, G.k);
 		W[U++] = "bwipp.debugecc#23386", W[U++] = be, $();
 	}
@@ -4782,7 +4786,7 @@ function $t() {
 		var e = W[--U], t = q(G.pdf417_clusters, e), n = W[--U];
 		G.v = q(t, n), W[U++] = Infinity;
 		for (var r = 0; r < 17; r++) W[U++] = 0;
-		for (var i = jt(Tt(17), G.v, 2), a = 0, o = i.length; a < o; a++) W[U++] = q(i, a) - 48;
+		for (var i = Nt(Dt(17), G.v, 2), a = 0, o = i.length; a < o; a++) W[U++] = q(i, a) - 48;
 		var s = K();
 		W[U++] = Y(s, s.length - 17, 17);
 	}, G.compact ? G.rwid = 17 * G.c + 17 + 17 + 1 : G.rwid = 17 * G.c + 17 + 17 + 17 + 18, W[U++] = G.rwid * G.r;
@@ -4817,17 +4821,17 @@ function $t() {
 	W[U++] = Infinity;
 	for (var Ne = G.pixs, Pe = G.rwid, Fe = G.r, Ie = G.rowmult, Le = [], Re = 0, ze = G.r; Re < ze; Re++) Le[Re] = G.rowmult;
 	Le = K(Le), W[U++] = "ren", W[U++] = "renmatrix", W[U++] = "pixs", W[U++] = Ne, W[U++] = "pixx", W[U++] = Pe, W[U++] = "pixy", W[U++] = Fe * Ie, W[U++] = "rowheights", W[U++] = Le, W[U++] = "height", W[U++] = G.r * G.rowmult / 72, W[U++] = "width", W[U++] = G.rwid / 72, W[U++] = "borderleft", W[U++] = 2, W[U++] = "borderright", W[U++] = 2, W[U++] = "bordertop", W[U++] = 2, W[U++] = "borderbottom", W[U++] = 2, W[U++] = "opt", W[U++] = G.options;
-	var Be = wt();
-	W[U++] = Be, G._render && rn(), G = e;
+	var Be = Et();
+	W[U++] = Be, G._render && on(), G = e;
 }
-function en() {
+function nn() {
 	var e = W[--U];
 	G.pixx = e, (G.guardwidth < 0 || G.guardwidth > 20) && (W[U++] = "bwipp.renderBadGuardwidth#41292", W[U++] = "guardwidth must be from 0 to 20", $()), (G.guardheight < 0 || G.guardheight > 20) && (W[U++] = "bwipp.renderBadGuardheight#41296", W[U++] = "guardheight must be from 0 to 20", $()), (G.guardleftpos < -50 || G.guardleftpos > 150) && (W[U++] = "bwipp.renderBadGuardleftpos#41300", W[U++] = "guardleftpos must be from -50 to 150", $()), (G.guardleftypos < -50 || G.guardleftypos > 150) && (W[U++] = "bwipp.renderBadGuardleftypos#41304", W[U++] = "guardleftypos must be from -50 to 150", $()), (G.guardrightpos < -50 || G.guardrightpos > 150) && (W[U++] = "bwipp.renderBadGuardrightpos#41308", W[U++] = "guardrightpos must be from -50 to 150", $()), (G.guardrightypos < -50 || G.guardrightypos > 150) && (W[U++] = "bwipp.renderBadGuardrightypos#41312", W[U++] = "guardrightypos must be from -50 to 150", $()), G.guardwhitespace && (H.selectfont("OCR-B", G.guardheight * 2), G.guardleftpos != 0 && (H.moveto(-G.guardleftpos - 2, Q(G.guardleftypos - G.guardheight / 2 - 1.25)), H.show("<", 0, 0)), G.guardrightpos != 0 && (H.moveto(Q(G.guardrightpos + G.pixx - G.guardwidth) - 1, Q(G.guardrightypos - G.guardheight / 2 - 1.25)), H.show(">", 0, 0)));
 }
-function tn() {
-	if (!tn.globals) {
+function rn() {
+	if (!rn.globals) {
 		var e = G;
-		G = tn.globals = {}, G.rendertext_positions = /* @__PURE__ */ new Map([
+		G = rn.globals = {}, G.rendertext_positions = /* @__PURE__ */ new Map([
 			["forward", /* @__PURE__ */ new Map([
 				["offleft", function() {
 					W[U++] = Q(-G.tw - G.nudge);
@@ -4959,7 +4963,7 @@ function tn() {
 		]), G = e;
 	}
 	var e = G;
-	G = Object.assign({}, G, tn.globals), Pt();
+	G = Object.assign({}, G, rn.globals), It();
 	var t = W[--U];
 	G.grp = t;
 	var n = W[--U];
@@ -4969,17 +4973,17 @@ function tn() {
 		var e = W[--U];
 		G.makeerr_msg = e;
 		var t = W[--U];
-		if (G.makeerr_name = kt(Tt(128), t), G.grp == 1) W[U++] = "text";
+		if (G.makeerr_name = jt(Dt(128), t), G.grp == 1) W[U++] = "text";
 		else if (G.grp == 2) W[U++] = "extratext";
 		else {
-			var n = Tt(5);
+			var n = Dt(5);
 			X(n, 0, "text"), J(n, 4, G.grp + 48), W[U++] = n;
 		}
 		var r = W[--U];
 		G.makeerr_pfx = r;
-		var i = Tt(G.makeerr_pfx.length + 6 + G.makeerr_name.length);
+		var i = Dt(G.makeerr_pfx.length + 6 + G.makeerr_name.length);
 		X(i, 0, "bwipp."), X(i, 6, G.makeerr_pfx), X(i, G.makeerr_pfx.length + 6, G.makeerr_name);
-		var a = Tt(G.makeerr_pfx.length + G.makeerr_msg.length);
+		var a = Dt(G.makeerr_pfx.length + G.makeerr_msg.length);
 		X(a, 0, G.makeerr_pfx), X(a, G.makeerr_pfx.length, G.makeerr_msg), W[U++] = i, W[U++] = a;
 	}, G.positiontext = function() {
 		var e = W[--U];
@@ -4987,27 +4991,27 @@ function tn() {
 		var t = W[--U];
 		G.tw = t, G.nudge = 1;
 		var n = W[--U], r = q(G.rendertext_positions, n);
-		W[U++] = r, W[U++] = r, Et(4, -1);
+		W[U++] = r, W[U++] = r, Ot(4, -1);
 		var i = W[U - 1];
-		Bt(i, "center") && (W[U - 1] = "xcenter");
+		Ht(i, "center") && (W[U - 1] = "xcenter");
 		var a = W[--U], o = W[--U];
 		if (q(o, a)() === !0) return !0;
 		var s = W[--U], c = W[--U];
-		W[U++] = s, W[U++] = c, Et(3, -1);
+		W[U++] = s, W[U++] = c, Ot(3, -1);
 		var l = W[U - 1];
-		Bt(l, "center") && (W[U - 1] = "ycenter");
+		Ht(l, "center") && (W[U - 1] = "ycenter");
 		var u = W[--U], d = W[--U];
 		if (q(d, u)() === !0) return !0;
 	};
 	for (var i = 0; i < 1; i++) {
-		if (G.txt.length > 0 && Bt(G.xalign, "unset") && Bt(G.yalign, "unset") && G.content.length == 0) {
-			Vt(G.color, "unset") && H.setcolor(G.color), G.s = 0, G.fn = "", G.xoff = 0, G.yoff = 0;
+		if (G.txt.length > 0 && Ht(G.xalign, "unset") && Ht(G.yalign, "unset") && G.content.length == 0) {
+			Ut(G.color, "unset") && H.setcolor(G.color), G.s = 0, G.fn = "", G.xoff = 0, G.yoff = 0;
 			try {
-				Lt(G.txt, function() {
+				zt(G.txt, function() {
 					var e = W[--U];
 					Z(e);
 					var t = W[U - 1], n = W[U - 2];
-					if (t != G.s || Vt(n, G.fn)) {
+					if (t != G.s || Ut(n, G.fn)) {
 						if (W[U - 1] <= 0) throw U -= 5, Infinity;
 						var r = W[--U], i = W[--U];
 						G.s = r, G.fn = i, H.selectfont(i, r);
@@ -5034,10 +5038,10 @@ function tn() {
 			break;
 		}
 		if (G.content.length == 0 && G.txt.length > 0) {
-			W[U++] = Infinity, Lt(G.txt, function() {
+			W[U++] = Infinity, zt(G.txt, function() {
 				var e = W[--U];
-				Lt(q(e, 0));
-			}), G.txtchars = K(), G.tstr = Tt(G.txtchars.length);
+				zt(q(e, 0));
+			}), G.txtchars = K(), G.tstr = Dt(G.txtchars.length);
 			for (var a = 0, o = G.txtchars.length - 1; a <= o; a += 1) J(G.tstr, a, q(G.txtchars, a));
 			G.content = G.tstr;
 		}
@@ -5051,7 +5055,7 @@ function tn() {
 		}
 		if (G.subspace.length != 0) for (var s = 0, c = G.content.length - 1; s <= c; s += 1) {
 			var l = Y(G.content, s, 1);
-			if (W[U++] = s, It(G.subspace, l), W[--U]) {
+			if (W[U++] = s, Rt(G.subspace, l), W[--U]) {
 				U--, U--;
 				var u = W[U - 2];
 				J(G.content, u, 32);
@@ -5065,7 +5069,7 @@ function tn() {
 			}
 			for (W[U++] = Infinity, W[U++] = G.content;;) {
 				var d = W[--U];
-				if (It(d, G.split), W[--U]) {
+				if (Rt(d, G.split), W[--U]) {
 					var f = W[--U];
 					U--;
 					var p = W[--U];
@@ -5074,7 +5078,7 @@ function tn() {
 			}
 			G.textlines = K();
 		} else G.textlines = K([G.content]);
-		if (Vt(G.color, "unset") && H.setcolor(G.color), H.selectfont(G.font, G.size), G.content.length == 0) W[U++] = 0;
+		if (Ut(G.color, "unset") && H.setcolor(G.color), H.selectfont(G.font, G.size), G.content.length == 0) W[U++] = 0;
 		else {
 			H.save(), H.newpath(), H.moveto(0, 0), H.charpath("0", !1);
 			var m = H.pathbbox();
@@ -5095,25 +5099,25 @@ function tn() {
 		var C = W[--U], w = W[--U];
 		G[w] = Q(C + (G.content.length - 1) * G.gaps);
 		var T = G.textlines.length;
-		if (G.textheight = Q(T * G.textascent + (T - 1) * G.linegaps), Bt(G.xalign, "unset") && (G.xalign = "center"), Bt(G.yalign, "unset") && (G.yalign = "below"), Bt(G.xalign, "justify")) {
-			if (Vt(G.direction, "forward") && Vt(G.direction, "backward")) {
+		if (G.textheight = Q(T * G.textascent + (T - 1) * G.linegaps), Ht(G.xalign, "unset") && (G.xalign = "center"), Ht(G.yalign, "unset") && (G.yalign = "below"), Ht(G.xalign, "justify")) {
+			if (Ut(G.direction, "forward") && Ut(G.direction, "backward")) {
 				W[U++] = "xjustify", W[U++] = "xalign=justify requires forward or backward text", G.makeerr(), W[U++] = !1;
 				break;
 			}
-			if (Ht(G.textwidth, G.pixx) && G.content.length > 1) {
+			if (Wt(G.textwidth, G.pixx) && G.content.length > 1) {
 				G.gaps = Q(G.pixx - G.textwidth) / (G.content.length - 1);
-				var E = Bt(G.direction, "forward") ? "left" : "right";
+				var E = Ht(G.direction, "forward") ? "left" : "right";
 				G.xalign = E;
 			} else G.gaps = 0, G.xalign = "center";
 		}
-		if (Bt(G.yalign, "justify")) {
-			if (Vt(G.direction, "upward") && Vt(G.direction, "downward")) {
+		if (Ht(G.yalign, "justify")) {
+			if (Ut(G.direction, "upward") && Ut(G.direction, "downward")) {
 				W[U++] = "yjustify", W[U++] = "yalign=justify requires upward or downward text", G.makeerr(), W[U++] = !1;
 				break;
 			}
-			if (Ht(G.textwidth, G.pixy) && G.content.length > 1) {
+			if (Wt(G.textwidth, G.pixy) && G.content.length > 1) {
 				G.gaps = Q(G.pixy - G.textwidth) / (G.content.length - 1);
-				var D = Bt(G.direction, "upward") ? "bottom" : "top";
+				var D = Ht(G.direction, "upward") ? "bottom" : "top";
 				G.yalign = D;
 			} else G.gaps = 0, G.yalign = "center";
 		}
@@ -5139,12 +5143,12 @@ function tn() {
 	}
 	G = e;
 }
-function nn() {
+function an() {
 	if (G.bwipjs_rawstack) G.bwipjs_rawstack.push(W[--U]);
 	else {
-		if (!nn.globals) {
+		if (!an.globals) {
 			var e = G;
-			G = nn.globals = {}, G.renlinear_xalignopts = /* @__PURE__ */ new Map([
+			G = an.globals = {}, G.renlinear_xalignopts = /* @__PURE__ */ new Map([
 				["offleft", "offleft"],
 				["left", "left"],
 				["center", "center"],
@@ -5166,18 +5170,18 @@ function nn() {
 			]), G = e;
 		}
 		var e = G;
-		G = Object.assign({}, G, nn.globals), G.sbs = K([]), G.bhs = K([]), G.bbs = K([]), G.txt = K([]), Wt(), G.text1xalign = "unset", G.text1yalign = "unset", G.includetext = !1, G.barcolor = "unset", G.bordercolor = "unset", G.inkspread = null, G.width = 0, G.barratio = 1, G.spaceratio = 1, G.showborder = !1, G.showbearer = !1, G.borderleft = 10, G.borderright = 10, G.bordertop = 1, G.borderbottom = 1, G.borderwidth = .5, G.guardwhitespace = !1, G.guardleftpos = 0, G.guardleftypos = 0, G.guardrightpos = 0, G.guardrightypos = 0, G.guardwidth = 5, G.guardheight = 7;
+		G = Object.assign({}, G, an.globals), G.sbs = K([]), G.bhs = K([]), G.bbs = K([]), G.txt = K([]), Kt(), G.text1xalign = "unset", G.text1yalign = "unset", G.includetext = !1, G.barcolor = "unset", G.bordercolor = "unset", G.inkspread = null, G.width = 0, G.barratio = 1, G.spaceratio = 1, G.showborder = !1, G.showbearer = !1, G.borderleft = 10, G.borderright = 10, G.bordertop = 1, G.borderbottom = 1, G.borderwidth = .5, G.guardwhitespace = !1, G.guardleftpos = 0, G.guardleftypos = 0, G.guardrightpos = 0, G.guardrightypos = 0, G.guardwidth = 5, G.guardheight = 7;
 		var t = W[--U];
-		Lt(t, function() {
+		zt(t, function() {
 			var e = W[--U], t = W[--U];
 			G[t] = e;
-		}), W[U++] = G.opt, Nt(G, "opt"), W[U++] = null, qt(), W[U - 1] = "textopts", Gt();
+		}), W[U++] = G.opt, Ft(G, "opt"), W[U++] = null, Yt(), W[U - 1] = "textopts", qt();
 		var n = W[--U], r = W[--U];
 		G[r] = n;
 		for (var i = 1; i <= 9; i += 1) {
 			G.textgrp = i;
 			var a = q(G.textopts, G.textgrp - 1);
-			W[U++] = G.textgrp, W[U++] = a, an(), W[--U] || $();
+			W[U++] = G.textgrp, W[U++] = a, sn(), W[--U] || $();
 		}
 		if ((G.inkspread < -1 || G.inkspread > 1) && (W[U++] = "bwipp.renlinearBadInkspread#41668", W[U++] = "inkspread must be from -1 to 1", $()), (G.borderleft < -1 || G.borderleft > 50) && (W[U++] = "bwipp.renlinearBadBorderleft#41672", W[U++] = "borderleft must be from -1 to 50", $()), (G.borderright < -1 || G.borderright > 50) && (W[U++] = "bwipp.renlinearBadBorderright#41676", W[U++] = "borderright must be from -1 to 50", $()), (G.bordertop < -1 || G.bordertop > 50) && (W[U++] = "bwipp.renlinearBadBordertop#41680", W[U++] = "bordertop must be from -1 to 50", $()), (G.borderbottom < -1 || G.borderbottom > 50) && (W[U++] = "bwipp.renlinearBadBorderbottom#41684", W[U++] = "borderbottom must be from -1 to 50", $()), (G.borderwidth < 0 || G.borderwidth > 10) && (W[U++] = "bwipp.renlinearBadBorderwidth#41688", W[U++] = "borderwidth must be from 0 to 10", $()), (G.barratio < .1 || G.barratio > 5) && (W[U++] = "bwipp.renlinearBadBarratio#41692", W[U++] = "barratio must be from 0.1 to 5", $()), (G.spaceratio < .1 || G.spaceratio > 5) && (W[U++] = "bwipp.renlinearBadSpaceratio#41696", W[U++] = "spaceratio must be from 0.1 to 5", $()), G.width != 0 && (G.width < .01 || G.width > 20) && (W[U++] = "bwipp.renlinearBadWidth#41700", W[U++] = "width must be 0 or from 0.01 to 20", $()), (G.guardwidth < 0 || G.guardwidth > 20) && (W[U++] = "bwipp.renlinearBadGuardwidth#41704", W[U++] = "guardwidth must be from 0 to 20", $()), (G.guardheight < 0 || G.guardheight > 20) && (W[U++] = "bwipp.renlinearBadGuardheight#41708", W[U++] = "guardheight must be from 0 to 20", $()), (G.guardleftpos < -50 || G.guardleftpos > 150) && (W[U++] = "bwipp.renlinearBadGuardleftpos#41712", W[U++] = "guardleftpos must be from -50 to 150", $()), (G.guardleftypos < -50 || G.guardleftypos > 150) && (W[U++] = "bwipp.renlinearBadGuardleftypos#41716", W[U++] = "guardleftypos must be from -50 to 150", $()), (G.guardrightpos < -50 || G.guardrightpos > 150) && (W[U++] = "bwipp.renlinearBadGuardrightpos#41720", W[U++] = "guardrightpos must be from -50 to 150", $()), (G.guardrightypos < -50 || G.guardrightypos > 150) && (W[U++] = "bwipp.renlinearBadGuardrightypos#41724", W[U++] = "guardrightypos must be from -50 to 150", $()), G.sbs.length != 0) {
 			var o = G.sbs;
@@ -5201,7 +5205,7 @@ function nn() {
 			var m = W[--U], h = W[--U];
 			H.moveto(h, m), Z(G.tr);
 			var g = W[--U], _ = W[--U];
-			H.lineto(_, g), Vt(G.bordercolor, "unset") && H.setcolor(G.bordercolor), H.setlinewidth(Q(G.borderwidth - G.inkspread * 2)), H.stroke(), H.restore();
+			H.lineto(_, g), Ut(G.bordercolor, "unset") && H.setcolor(G.bordercolor), H.setlinewidth(Q(G.borderwidth - G.inkspread * 2)), H.stroke(), H.restore();
 		} else if (G.showborder) {
 			H.save(), H.newpath(), Z(G.bl);
 			var v = W[--U], y = W[--U];
@@ -5215,9 +5219,9 @@ function nn() {
 				var C = W[--U], w = W[--U];
 				H.lineto(w, C);
 			}
-			H.closepath(), Vt(G.bordercolor, "unset") && H.setcolor(G.bordercolor), H.setlinewidth(G.borderwidth), H.stroke(), H.restore();
+			H.closepath(), Ut(G.bordercolor, "unset") && H.setcolor(G.bordercolor), H.setlinewidth(G.borderwidth), H.stroke(), H.restore();
 		}
-		H.save(), Vt(G.barcolor, "unset") && H.setcolor(G.barcolor);
+		H.save(), Ut(G.barcolor, "unset") && H.setcolor(G.barcolor);
 		for (var T = G.bars, E = 0, D = T.length; E < D; E++) {
 			var O = q(T, E);
 			if (W[U++] = O, O != -1) {
@@ -5234,17 +5238,17 @@ function nn() {
 		H.restore();
 		for (var P = 1; P <= 9; P += 1) if (G.textgrp = P, q(q(G.textopts, G.textgrp - 1), "").length != 0 || G.textgrp == 1 && G.txt.length > 0 && G.includetext) {
 			var ee = q(G.textopts, G.textgrp - 1);
-			J(ee, "content", q(ee, "")), W[U++] = ee, J(ee, "txt", G.textgrp == 1 ? G.txt : K([])), W[U++] = G.pixx, W[U++] = G.pixy, W[U++] = G.textgrp, Et(4, -1), tn(), W[--U] || (H.restore(), $());
+			J(ee, "content", q(ee, "")), W[U++] = ee, J(ee, "txt", G.textgrp == 1 ? G.txt : K([])), W[U++] = G.pixx, W[U++] = G.pixy, W[U++] = G.textgrp, Ot(4, -1), rn(), W[--U] || (H.restore(), $());
 		}
-		W[U++] = G.pixx, en(), H.restore(), G = e;
+		W[U++] = G.pixx, nn(), H.restore(), G = e;
 	}
 }
-function rn() {
+function on() {
 	if (G.bwipjs_rawstack) G.bwipjs_rawstack.push(W[--U]);
 	else {
-		if (!rn.globals) {
+		if (!on.globals) {
 			var e = G;
-			G = rn.globals = {}, G.renmatrix_xalignopts = /* @__PURE__ */ new Map([
+			G = on.globals = {}, G.renmatrix_xalignopts = /* @__PURE__ */ new Map([
 				["offleft", "offleft"],
 				["left", "left"],
 				["center", "center"],
@@ -5266,14 +5270,14 @@ function rn() {
 			]), G = e;
 		}
 		var e = G;
-		G = Object.assign({}, G, rn.globals), G.width = 1, G.height = 1, G.barcolor = "unset", G.bordercolor = "unset", G.colormap = "unset", G.dotty = !1, G.inkspread = null, G.inkspreadh = null, G.inkspreadv = null, G.txt = K([]), Wt(), G.text1xalign = "unset", G.text1yalign = "unset", G.includetext = !1, G.showborder = !1, G.borderleft = 0, G.borderright = 0, G.bordertop = 0, G.borderbottom = 0, G.borderwidth = .5, G.guardwhitespace = !1, G.guardleftpos = 0, G.guardleftypos = 0, G.guardrightpos = 0, G.guardrightypos = 0, G.guardwidth = 5, G.guardheight = 7;
+		G = Object.assign({}, G, on.globals), G.width = 1, G.height = 1, G.barcolor = "unset", G.bordercolor = "unset", G.colormap = "unset", G.dotty = !1, G.inkspread = null, G.inkspreadh = null, G.inkspreadv = null, G.txt = K([]), Kt(), G.text1xalign = "unset", G.text1yalign = "unset", G.includetext = !1, G.showborder = !1, G.borderleft = 0, G.borderright = 0, G.bordertop = 0, G.borderbottom = 0, G.borderwidth = .5, G.guardwhitespace = !1, G.guardleftpos = 0, G.guardleftypos = 0, G.guardrightpos = 0, G.guardrightypos = 0, G.guardwidth = 5, G.guardheight = 7;
 		var t = W[--U];
-		Lt(t, function() {
+		zt(t, function() {
 			var e = W[--U], t = W[--U];
 			G[t] = e;
-		}), W[U++] = G.opt, Nt(G, "opt"), W[U++] = null, qt(), W[U - 1] = "textopts", Gt();
+		}), W[U++] = G.opt, Ft(G, "opt"), W[U++] = null, Yt(), W[U - 1] = "textopts", qt();
 		var n = W[--U], r = W[--U];
-		if (G[r] = n, G.inkspread ?? (G.inkspread = 0), G.inkspreadh ?? (G.inkspreadh = G.inkspread), G.inkspreadv ?? (G.inkspreadv = G.inkspread), !Mt(G, "rowheights")) {
+		if (G[r] = n, G.inkspread ?? (G.inkspread = 0), G.inkspreadh ?? (G.inkspreadh = G.inkspread), G.inkspreadv ?? (G.inkspreadv = G.inkspread), !Pt(G, "rowheights")) {
 			W[U++] = Infinity;
 			for (var i = 0, a = G.pixy; i < a; i++) W[U++] = 1;
 			G.rowheights = K();
@@ -5287,7 +5291,7 @@ function rn() {
 		for (var d = 1; d <= 9; d += 1) {
 			G.textgrp = d;
 			var f = q(G.textopts, G.textgrp - 1);
-			W[U++] = G.textgrp, W[U++] = f, an(), W[--U] || $();
+			W[U++] = G.textgrp, W[U++] = f, sn(), W[--U] || $();
 		}
 		(G.inkspread < -1 || G.inkspread > 1) && (W[U++] = "bwipp.renmatrixBadInkspread#41948", W[U++] = "inkspread must be from -1 to 1", $()), (G.inkspreadh < -1 || G.inkspreadh > 1) && (W[U++] = "bwipp.renmatrixBadInkspreadh#41952", W[U++] = "inkspreadh must be from -1 to 1", $()), (G.inkspreadv < -1 || G.inkspreadv > 1) && (W[U++] = "bwipp.renmatrixBadInkspreadv#41956", W[U++] = "inkspreadv must be from -1 to 1", $()), (G.borderleft < -1 || G.borderleft > 50) && (W[U++] = "bwipp.renmatrixBadBorderleft#41960", W[U++] = "borderleft must be from -1 to 50", $()), (G.borderright < -1 || G.borderright > 50) && (W[U++] = "bwipp.renmatrixBadBorderright#41964", W[U++] = "borderright must be from -1 to 50", $()), (G.bordertop < -1 || G.bordertop > 50) && (W[U++] = "bwipp.renmatrixBadBordertop#41968", W[U++] = "bordertop must be from -1 to 50", $()), (G.borderbottom < -1 || G.borderbottom > 50) && (W[U++] = "bwipp.renmatrixBadBorderbottom#41972", W[U++] = "borderbottom must be from -1 to 50", $()), (G.borderwidth < 0 || G.borderwidth > 10) && (W[U++] = "bwipp.renmatrixBadBorderwidth#41976", W[U++] = "borderwidth must be from 0 to 10", $()), (G.width < .01 || G.width > 50) && (W[U++] = "bwipp.renmatrixBadWidth#41980", W[U++] = "width must be from 0.01 to 50", $()), (G.height < .01 || G.height > 50) && (W[U++] = "bwipp.renmatrixBadHeight#41984", W[U++] = "height must be from 0.01 to 50", $()), (G.pixx <= 0 || G.pixy <= 0) && (W[U++] = "bwipp.renmatrixBadDimensions#41988", W[U++] = "The symbol dimensions must be positive", $()), G.pixs.length < G.pixx * G.pixy && (W[U++] = "bwipp.renmatrixBadPixelData#41992", W[U++] = "The pixel data is shorter than the symbol dimensions require", $()), G.xyget = function() {
 			var e = W[--U], t = W[--U];
@@ -5313,18 +5317,18 @@ function rn() {
 				var y = W[--U], b = W[--U];
 				H.lineto(b, y);
 			}
-			H.closepath(), Vt(G.bordercolor, "unset") && H.setcolor(G.bordercolor), H.setlinewidth(Q(G.borderwidth - G.inkspread * 2)), H.stroke(), H.restore();
+			H.closepath(), Ut(G.bordercolor, "unset") && H.setcolor(G.bordercolor), H.setlinewidth(Q(G.borderwidth - G.inkspread * 2)), H.stroke(), H.restore();
 		}
-		Bt(G.colormap, "unset") && (G.colormap = /* @__PURE__ */ new Map([[1, G.barcolor]]));
+		Ht(G.colormap, "unset") && (G.colormap = /* @__PURE__ */ new Map([[1, G.barcolor]]));
 		for (var x = G.colormap, S = x.size, C = x.keys(), w = 0; w < S; w++) {
 			var T = C.next().value, E = x.get(T);
-			if (W[U++] = T, W[U++] = E, Vt(E, "unset")) {
+			if (W[U++] = T, W[U++] = E, Ut(E, "unset")) {
 				var D = W[--U];
 				H.setcolor(D);
 			} else U--;
 			var O = W[--U];
 			G.key = O;
-			for (var k = [], A = G.pixs, j = 0, M = A.length; j < M; j++) k[j] = +!!Bt(q(A, j), G.key);
+			for (var k = [], A = G.pixs, j = 0, M = A.length; j < M; j++) k[j] = +!!Ht(q(A, j), G.key);
 			if (k = K(k), W[U++] = k, G.dotty) G.drawlayerdots();
 			else {
 				var N = W[--U];
@@ -5334,15 +5338,15 @@ function rn() {
 		H.restore();
 		for (var P = 1; P <= 9; P += 1) if (G.textgrp = P, q(q(G.textopts, G.textgrp - 1), "").length != 0 || G.textgrp == 1 && G.txt.length > 0 && G.includetext) {
 			var ee = q(G.textopts, G.textgrp - 1);
-			J(ee, "txt", G.txt), J(ee, "content", q(ee, "")), W[U++] = G.width * 72, W[U++] = G.height * 72, W[U++] = G.textgrp, W[U++] = ee, tn(), W[--U] || (H.restore(), $());
+			J(ee, "txt", G.txt), J(ee, "content", q(ee, "")), W[U++] = G.width * 72, W[U++] = G.height * 72, W[U++] = G.textgrp, W[U++] = ee, rn(), W[--U] || (H.restore(), $());
 		}
-		W[U++] = G.width * 72, en(), H.restore(), G = e;
+		W[U++] = G.width * 72, nn(), H.restore(), G = e;
 	}
 }
-function an() {
-	if (!an.globals) {
+function sn() {
+	if (!sn.globals) {
 		var e = G;
-		G = an.globals = {}, G.validatetext_xalignopts = /* @__PURE__ */ new Map([
+		G = sn.globals = {}, G.validatetext_xalignopts = /* @__PURE__ */ new Map([
 			["offleft", "offleft"],
 			["left", "left"],
 			["center", "center"],
@@ -5364,14 +5368,14 @@ function an() {
 		]), G = e;
 	}
 	var e = G;
-	G = Object.assign({}, G, an.globals);
+	G = Object.assign({}, G, sn.globals);
 	var t = W[--U];
 	G.td = t;
 	var n = W[--U];
 	if (G.grp = n, W[U++] = "pfx", G.grp == 1) W[U++] = "text";
 	else if (G.grp == 2) W[U++] = "extratext";
 	else {
-		var r = Tt(5);
+		var r = Dt(5);
 		X(r, 0, "text"), J(r, 4, G.grp + 48), W[U++] = r;
 	}
 	var i = W[--U], a = W[--U];
@@ -5379,30 +5383,30 @@ function an() {
 		var e = W[--U];
 		G.msgtail = e;
 		var t = W[--U];
-		G.prop = kt(Tt(128), t);
-		var n = Tt(G.pfx.length + 9 + G.prop.length);
+		G.prop = jt(Dt(128), t);
+		var n = Dt(G.pfx.length + 9 + G.prop.length);
 		X(n, 0, "bwipp."), X(n, 6, G.pfx), X(n, G.pfx.length + 6, "Bad"), X(n, G.pfx.length + 9, G.prop);
-		var r = Tt(G.pfx.length + G.prop.length + G.msgtail.length);
+		var r = Dt(G.pfx.length + G.prop.length + G.msgtail.length);
 		X(r, 0, G.pfx), X(r, G.pfx.length, G.prop), X(r, G.pfx.length + G.prop.length, G.msgtail), W[U++] = n, W[U++] = r;
 	};
 	for (var o = 0; o < 1; o++) {
 		var s = q(G.td, "xalign");
-		if (W[U++] = s, Vt(s, "unset")) {
+		if (W[U++] = s, Ut(s, "unset")) {
 			var c = W[--U];
-			if (!Mt(G.validatetext_xalignopts, c)) {
+			if (!Pt(G.validatetext_xalignopts, c)) {
 				W[U++] = "xalign", W[U++] = " must be offleft, left, center, right, offright or justify", G.mkerr(), W[U++] = !1;
 				break;
 			}
 		} else U--;
 		var l = q(G.td, "yalign");
-		if (W[U++] = l, Vt(l, "unset")) {
+		if (W[U++] = l, Ut(l, "unset")) {
 			var u = W[--U];
-			if (!Mt(G.validatetext_yalignopts, u)) {
+			if (!Pt(G.validatetext_yalignopts, u)) {
 				W[U++] = "yalign", W[U++] = " must be above, top, center, bottom, below or justify", G.mkerr(), W[U++] = !1;
 				break;
 			}
 		} else U--;
-		if (!Mt(G.validatetext_directionoptions, q(G.td, "direction"))) {
+		if (!Pt(G.validatetext_directionoptions, q(G.td, "direction"))) {
 			W[U++] = "direction", W[U++] = " must be forward, backward, upward or downward", G.mkerr(), W[U++] = !1;
 			break;
 		}
@@ -5436,7 +5440,7 @@ function an() {
 	}
 	G = e;
 }
-function on(e, t, n, r, i) {
+function cn(e, t, n, r, i) {
 	if (typeof n != "string") throw Error("bwipp.typeError: barcode text not a string (" + n + ")");
 	if (r ||= {}, typeof r == "string") {
 		var a = r.split(" ");
@@ -5455,26 +5459,26 @@ function on(e, t, n, r, i) {
 	return H = e, W = [n, c], U = 2, G = { bwipjs_rawstack: i ? [] : !1 }, t(), !G.bwipjs_rawstack || G.bwipjs_rawstack;
 }
 // node_modules/@bwip-js/browser/dist/bwip-js.mjs
-function sn(e) {
+function ln(e) {
 	return e && /HTMLCanvasElement|OffscreenCanvas/.test(Object.getPrototypeOf(e).constructor.name);
 }
-function cn(e, t, n) {
+function un(e, t, n) {
 	if (typeof t == "string") {
 		var r = document.getElementById(t) || document.querySelector(t);
-		if (!sn(r)) throw Error("bwipjs: `" + t + "`: not a canvas");
-		t = n, n = hn(r);
-	} else if (sn(t)) {
+		if (!ln(r)) throw Error("bwipjs: `" + t + "`: not a canvas");
+		t = n, n = _n(r);
+	} else if (ln(t)) {
 		var r = t;
-		t = n, n = hn(r);
+		t = n, n = _n(r);
 	} else if (typeof n == "string") {
 		var r = document.getElementById(n) || document.querySelector(n);
-		if (!sn(r)) throw Error("bwipjs: `" + n + "`: not a canvas");
-		n = hn(r);
-	} else if (sn(n)) n = hn(n);
+		if (!ln(r)) throw Error("bwipjs: `" + n + "`: not a canvas");
+		n = _n(r);
+	} else if (ln(n)) n = _n(n);
 	else if (!n || typeof n != "object" || !n.init) throw Error("bwipjs: not a canvas or drawing object");
-	return dn(e, t, n);
+	return pn(e, t, n);
 }
-function ln(e) {
+function dn(e) {
 	var t = e.scale || 2, n = e.scaleX || t, r = e.scaleY || n;
 	if (e.scaleX = n < 1 ? 2 : n, e.scaleY = r < 1 ? e.scaleX : r, e.paddingleft = f(e.paddingleft, e.paddingwidth, e.padding, n), e.paddingright = f(e.paddingright, e.paddingwidth, e.padding, n), e.paddingtop = f(e.paddingtop, e.paddingheight, e.padding, r), e.paddingbottom = f(e.paddingbottom, e.paddingheight, e.padding, r), e.backgroundcolor) {
 		var i = "" + e.backgroundcolor;
@@ -5491,7 +5495,7 @@ function ln(e) {
 		return i = i < 0 ? 0 : i > 999 ? 999 : i, i * r | 0;
 	}
 }
-var un = {
+var fn = {
 	bcid: 1,
 	text: 1,
 	scale: 1,
@@ -5507,17 +5511,17 @@ var un = {
 	paddingbottom: 1,
 	backgroundcolor: 1
 };
-function dn(e, t, n) {
+function pn(e, t, n) {
 	var r = t.text;
 	if (!r) throw ReferenceError("bwip-js: bar code text not specified.");
-	ln(t), n.setopts && n.setopts(t);
+	dn(t), n.setopts && n.setopts(t);
 	var i = t.scaleX, a = t.scaleY;
 	t.rotate;
-	var o = new fn(n), s = {};
-	for (var c in t) un[c] || (s[c] = t[c]);
-	return s.alttext && (s.includetext = !0), +s.height && e != Qt && (s.height = s.height / 25.4 || .5), +s.width && (s.width = s.width / 25.4 || 0), o.scale(i, a), on(o, e, r, s), o.render();
+	var o = new mn(n), s = {};
+	for (var c in t) fn[c] || (s[c] = t[c]);
+	return s.alttext && (s.includetext = !0), +s.height && e != en && (s.height = s.height / 25.4 || .5), +s.width && (s.width = s.width / 25.4 || 0), o.scale(i, a), cn(o, e, r, s), o.render();
 }
-var fn = (function() {
+var mn = (function() {
 	var e = Math.floor, t = Math.round, n = Math.ceil, r = Math.min, i = Math.max;
 	function a(e) {
 		if (this.constructor !== a) return new a(e);
@@ -5809,7 +5813,7 @@ var fn = (function() {
 			t.drawing.clip(n);
 		});
 	}, a.prototype.drawlayer = function(e, t, n) {
-		let r = pn(e, t, n);
+		let r = hn(e, t, n);
 		this.newpath();
 		for (let e = 0, t = r.length; e < t; e++) {
 			let t = r[e];
@@ -5880,7 +5884,7 @@ var fn = (function() {
 		return this.drawing.end();
 	}, a;
 })();
-function pn(e, t, n, r, i) {
+function hn(e, t, n, r, i) {
 	let a = r || 0, o = i || 0, s = Array(n + 1), c = 0;
 	for (let r = n - 1; r >= 0; r--) {
 		let n = new Uint8Array(t);
@@ -5943,7 +5947,7 @@ function pn(e, t, n, r, i) {
 		}
 	}
 }
-function mn() {
+function gn() {
 	var e = 0, t = 0, n = 0, r = 0, i = 0, a = 0, o, s, c, l, u, d, f, p, m, h, g, _;
 	return {
 		setopts(e) {
@@ -5954,8 +5958,8 @@ function mn() {
 		},
 		measure: function(e, t, n, r) {
 			n |= 0, r |= 0;
-			for (var i = _n.lookup(t), a = 0, o = 0, s = 0, c = 0, l = e.length; c < l; c++) {
-				var u = e.charCodeAt(c), d = _n.getglyph(i, u, n, r);
+			for (var i = yn.lookup(t), a = 0, o = 0, s = 0, c = 0, l = e.length; c < l; c++) {
+				var u = e.charCodeAt(c), d = yn.getglyph(i, u, n, r);
 				o = Math.max(o, d.top), s = Math.max(s, d.height - d.top), c == l - 1 ? a += d.left + d.width : a += d.advance;
 			}
 			return {
@@ -6042,7 +6046,7 @@ function mn() {
 		},
 		text: function(e, t, n, r, i) {
 			e |= 0, t |= 0, p = parseInt(r.substr(0, 2), 16), m = parseInt(r.substr(2, 2), 16), h = parseInt(r.substr(4, 2), 16);
-			var a = _n.lookup(i.name), o = i.width | 0, s = i.height | 0, c = i.dx | 0, l = 0, u = 0, d = 0, f = 0;
+			var a = yn.lookup(i.name), o = i.width | 0, s = i.height | 0, c = i.dx | 0, l = 0, u = 0, d = 0, f = 0;
 			switch (i.rotate) {
 				case 90:
 					u = 1, d = -1;
@@ -6056,7 +6060,7 @@ function mn() {
 				default: l = 1, f = 1;
 			}
 			for (var g = 0, _ = 0; _ < n.length; _++) {
-				for (var y = n.charCodeAt(_), b = _n.getglyph(a, y, o, s), x = -b.top, S = b.left, C = b.width, w = b.height, T = b.bytes, E = b.offset, D = 0; D < C; D++) for (var O = 0; O < w; O++) {
+				for (var y = n.charCodeAt(_), b = yn.getglyph(a, y, o, s), x = -b.top, S = b.left, C = b.width, w = b.height, T = b.bytes, E = b.offset, D = 0; D < C; D++) for (var O = 0; O < w; O++) {
 					var k = T[E + O * C + D];
 					if (k) {
 						var A = g + S + D, j = x + O, M = l * A + u * j, N = d * A + f * j;
@@ -6131,9 +6135,9 @@ function mn() {
 		return !0;
 	}
 }
-function hn(e, t) {
-	sn(t) && (e = t);
-	var n, r = e.getContext("2d", { willReadFrequently: !0 }), i = mn();
+function _n(e, t) {
+	ln(t) && (e = t);
+	var n, r = e.getContext("2d", { willReadFrequently: !0 }), i = gn();
 	i.image = s, i.end = c;
 	var a, o = i.setopts;
 	return i.setopts = function(e) {
@@ -6149,7 +6153,7 @@ function hn(e, t) {
 		return r.putImageData(n, 0, 0), e;
 	}
 }
-function gn() {
+function vn() {
 	var e = 0, t = 0, n = 0, r = 0, i = 0, a = 0, o, s = "", c, l = "", u = [], d = {}, f, p, m = .55183475, h, g, _, v;
 	return {
 		setopts(e) {
@@ -6160,8 +6164,8 @@ function gn() {
 		},
 		measure(e, t, n, r) {
 			n |= 0, r |= 0;
-			for (var i = _n.lookup(t), a = 0, o = 0, s = 0, c = 0, l = e.length; c < l; c++) {
-				var u = e.charCodeAt(c), d = _n.getglyph(i, u, n, r);
+			for (var i = yn.lookup(t), a = 0, o = 0, s = 0, c = 0, l = e.length; c < l; c++) {
+				var u = e.charCodeAt(c), d = yn.getglyph(i, u, n, r);
 				d && (o = Math.max(o, d.top), s = Math.max(s, d.height - d.top), c == l - 1 ? a += d.left + d.width : a += d.advance);
 			}
 			return {
@@ -6239,8 +6243,8 @@ function gn() {
 		},
 		text(e, t, n, r, i) {
 			e |= 0, t |= 0;
-			for (var a = e, o = t, c = _n.lookup(i.name), l = i.width | 0, u = i.height | 0, d = i.dx | 0, f = "", p = 0; p < n.length; p++) {
-				var m = n.charCodeAt(p), h = _n.getpaths(c, m, l, u);
+			for (var a = e, o = t, c = yn.lookup(i.name), l = i.width | 0, u = i.height | 0, d = i.dx | 0, f = "", p = 0; p < n.length; p++) {
+				var m = n.charCodeAt(p), h = yn.getpaths(c, m, l, u);
 				if (h) {
 					if (h.length) {
 						for (var g = 0, _ = h.length; g < _; g++) {
@@ -6249,7 +6253,7 @@ function gn() {
 						}
 						f += "Z";
 					}
-					e += _n.getglyph(c, m, l, u).advance + d;
+					e += yn.getglyph(c, m, l, u).advance + d;
 				}
 			}
 			f && (i.rotate ? s += "<path d=\"" + f + "\" fill=\"#" + r + "\" transform=\"rotate(-" + i.rotate + " " + y(a, o) + ")\" />\n" : s += "<path d=\"" + f + "\" fill=\"#" + r + "\" />\n");
@@ -6267,7 +6271,7 @@ function gn() {
 		return "" + ((c | 0) == c ? c : c.toFixed(2)) + " " + ((l | 0) == l ? l : l.toFixed(2));
 	}
 }
-var _n = (function() {
+var yn = (function() {
 	var e = [], t = {}, n = {}, r = {}, i = 0;
 	return r.next = r, r.prev = r, {
 		lookup: o,
@@ -6283,7 +6287,7 @@ var _n = (function() {
 		else if (arguments.length == 4) i = +arguments[1] || 100, r = +arguments[2] || 100, a = arguments[3];
 		else throw Error("bwipjs: loadFont: invalid number of arguments");
 		n = n.toUpperCase();
-		var o = vn.InitFont(yn(a));
+		var o = bn.InitFont(xn(a));
 		o.bwipjs_name = n, o.bwipjs_multx = r, o.bwipjs_multy = i;
 		var s = t[n];
 		return s == null ? t[n] = s = e.push(o) - 1 : e[s] = o, s;
@@ -6303,7 +6307,7 @@ var _n = (function() {
 			var u = r;
 			return u.next.prev = l, l.next = u.next, l.prev = u, u.next = l, l;
 		}
-		var d = e[t], l = vn.GetGlyph(d, a, o * d.bwipjs_multx / 100, s * d.bwipjs_multy / 100) || vn.GetGlyph(d, 0, o * d.bwipjs_multx / 100, s * d.bwipjs_multy / 100);
+		var d = e[t], l = bn.GetGlyph(d, a, o * d.bwipjs_multx / 100, s * d.bwipjs_multy / 100) || bn.GetGlyph(d, 0, o * d.bwipjs_multx / 100, s * d.bwipjs_multy / 100);
 		if (l.bytes = l.pixels, l.cachekey = c, l.offset = 0, i > 250) {
 			var u = r, f = u.prev;
 			f.prev.next = u, u.prev = f.prev, f.next = f.prev = null, delete n[f.cachekey];
@@ -6315,9 +6319,9 @@ var _n = (function() {
 	function l(t, n, r, i) {
 		t |= 0, n |= 0, r = +r, i = +i, (!r || r < 8) && (r = 8), (!i || i < 8) && (i = r), (t < 0 || t >= e.length) && (t = 1), (!n || n < 32) && (n = 32);
 		var a = e[t];
-		return vn.GetPaths(a, n, r * a.bwipjs_multx / 100, i * a.bwipjs_multy / 100);
+		return bn.GetPaths(a, n, r * a.bwipjs_multx / 100, i * a.bwipjs_multy / 100);
 	}
-})(), vn = (function() {
+})(), bn = (function() {
 	var e = Math.floor, t = Math.ceil, n = Math.sqrt, r = Math.abs;
 	function i(e) {
 		for (var t = [], n = 0; n < e; n++) t.push({});
@@ -6987,7 +6991,7 @@ var _n = (function() {
 		GetPaths: xe
 	};
 })();
-function yn(e) {
+function xn(e) {
 	if (typeof e == "string") {
 		for (var t = /[^A-Za-z0-9+\/=\s]/.test(e) ? e : atob(e), n = t.length, r = new Uint8Array(n), i = 0; i < n; i++) r[i] = t.charCodeAt(i);
 		return r;
@@ -6996,12 +7000,12 @@ function yn(e) {
 	if (e instanceof ArrayBuffer) return new Uint8Array(e);
 	throw ReferenceError("data must be a binary or base64 encoded string or Uint8Array");
 }
-_n.loadFont("OCR-A", 100, 100, "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"), _n.loadFont("OCR-B", 96, 100, "AAEAAAAPAIAAAwBwRkZUTXxHn14AADmUAAAAHEdERUYAkwAEAAA4IAAAACBHUE9TuP+4/gAAOWQAAAAwR1NVQnZYZVQAADhAAAABJE9TLzJa+GPlAAABeAAAAGBjbWFwzJGg2QAAA2QAAAFCZ2FzcP//AAMAADgYAAAACGdseWbm+CwyAAAFeAAALwRoZWFkFgqHXQAAAPwAAAA2aGhlYQeFAeAAAAE0AAAAJGhtdHgIFCYVAAAB2AAAAYpsb2NhZAZYlAAABKgAAADObWF4cACtAGkAAAFYAAAAIG5hbWWukZg3AAA0fAAAAnlwb3N0tfQXywAANvgAAAEdAAEAAAACAADO4NltXw889QALA+gAAAAA2gMiKgAAAADaAyIqAA7/GQLWAwsAAAAIAAIAAAAAAAAAAQAABFL+sABaAtMAAP/9AtYAAQAAAAAAAAAAAAAAAAAAAF8AAQAAAGYAZgAFAAAAAAACAAAAAQABAAAAQAAAAAAAAAACAsMBkAAFAAACigK8AAAAjAKKArwAAAHgADEBAgAAAgAFCQAAAAAAAAAAAK8AAABoAAAAAAAAAABQZkVkAEAAIAB+AyD/OABaBFIBUAAAAAEAAAAAAiAC+QAAACAAAQLTAAAAAAAAAtMAAALTAAAC0wD1AtMAdALTAEQCvwA/Ar8APwLTAEQC0wDnAtMA0wLTAIgC0wBEAtMARALTAHIC0wBEAtMAxALTAIACvwA/AskAXgK/AFACvwA/Ar8APwK/AFkCvwA/Ar8APwK/AD8CvwA/AtMA1gLTAG8C0wBBAtMARALTAEEC0wBgAtMARAK/AEUCvwA/Ar8AbwK/AHICvwBtAr8AoAK/AEcCvwBbAr8AeAK/AFACvwBNAr8AWwK/AD8CvwBNAr8AQgK/AFsCvwBBAr8AZwK/AGECvwA/Ar8ATQK/AD4CvwA/Ar8AUwK/AFYCvwBbAtMApQLTAIAC0wBVAtMARALTAEQC0wC2Ar8ATQK/AEoCvwB1Ar8APwK/AE0CvwBhAr8AQgK/AGoCyQCDAskAZwK/AHsCyQDLAr8APwK/AE0CvwA/Ar8ASgK/AD8CvwCaAr8AZwK/AE0CvwBNAr8AQgK/AEECvwBhAr8APwK/AGEC0wBEAQwARABSAnICBgG2AA4AAAAAAAMAAAADAAAAHAABAAAAAAA8AAMAAQAAABwABAAgAAAABAAEAAEAAAB+//8AAAAg////4wABAAAAAAAAAQYAAAEAAAAAAAAAAQIAAAACAAAAAAAAAAAAAAAAAAAAAQAAAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALABiAMYBUAG6AkICYgKMArQC8gMaAzoDVgNwA5QEEgQ2BIgE2AUSBVYFngXSBjQGegaoBtwHDAcyB1oHxAhUCIQI2glACXgJrAnaCjQKYgqYCswLAgskC2QLlgvuDB4MgAzODUQNbA2eDcgOEg5ODoAOsg7WDvoPHA9ED2APgg/eECoQaBCyEPgRLBGUEdISAhJOEoASqBLyEygTVhOiE+gUIhSYFN4VGBVGFYYVvBXyFiAWbBaEFs4XDhcmF0QXaheCAAAAAgD1/7wBfQL9AA8AGwAAFzU0NjsBMhYdARQGKwEiJhMRNDYyFhURFAYiJvUbEi4SGxsSLhIbFxskGxomGhcuEhsbEi4SGxsBcgGHExobEv55EhsaAAAAAAIAdAHHAgkC/QASACMAABM1NDY7ATIXFhUwFQ8BDgEjIiYlNTQ2OwEyFxYdAQcOASMiJnQbEh0SDg4BHQIZEhEcASQbEhcRDg4ZBBYREhsB9NwSGw0MDwEC5BAXGxLcExoNDBAE5RAUGwAAAAIARP/4Ai4DAABEAEgAADc0NjsBNyMiJjQ2OwE3PgEzMhcWFQczNzYzMhYdAQcXHgEVFAYrAQczMhYUBisBBw4BIyImPQE3IwcOASMiJyY1NycuATczNyNEGhMVJicSGxoTOygDGRASDQ4liCgNHxIbIwUQFxsSFCUlExobEjopAxoPEhskhykDGRASDQ4mBRIXnoglh/4TGqcaJhqxDhUODhCosSMaEwqcAQMZERIbpxskG7YOFRsSCqK2DxQODRGsAQIaPqcAAwA///sCHwL9AEcAWABfAAA3JjU0NjMyFxYXFhczNScuAScuAjU0NzY/ATU0NjIWHQEXFhcxFhUUBiMiJyYvARUXFhcWFx4BFRQHBg8BFRQGIiY9ASMmJxMGFRQXFhcWFxYXHgIfATUTNzY1NC8BQQIbEhYVFwwYLQUEIS4cGyIWNjZSBBoiGgRpOAkbEhcOITUGBCwcHR8fHjc3UwQaIhoFlSi8YwMECAgFBgwMChwCB1YGZWQHoAUMExodIQYNBNwBChEPDyQ2IkwqKwoBCRMaGxIJAQ5SDA4SGhMsCwHFAQ4MDBYVPytNMDENAQYSGxoTBw1kAcoORQsKCggHBQUGBgUKAQKq/iABFEo8JAIAAAAABQA///gCHwMAAA0AHAAoADcARwAAJSIVFBcWHwEzMjc2NTQHJjU0NzYzMhcWFAcGIyIDIhUUFzsBMjc2NTQHJjU0NzYzMhcWFAcGIyICJjU0NwE2MzIWFRQHAQYjAaIhBQUOAQgRCQl6HyAfNzogICAgOjiuIxgBChEJB3wgISA6Nx8fHx83OycbBgGMDRQSGwb+exAYtTIPDxABAhAPEjKVKDg5KyspKXIqKQKuMikIEA8SMpUoODkrKykqcikp/hQbEw0JAq0MGxIMCv1dFwAAAAADAET/9wIuAwAAQgBOAFwAADc0PwEnJjU0NzYzMhcWFRQHDgEHDgIPARc3NjU0NjIWFRQPARcWFx4BFxYVFAYjIicmJyYnJicmJyYvAQcGKwEuATcUFzMyPwEnBwYHBhMUHwE3Njc2NTQnJiMiRF8EA0Q1NVhKNTQJChQYFxY+BASXBBUcJBs3AgICBwcHAwMbEgYFBgQDBAUCAQUGAQMEPlEGYnVafwYwKAShBRwPEBwwAwRMHiAcGyJozXJUAwRdVVQwMCgmRBsaGyMXGBMuAwPSCDRFExscEnxTAwIFCAgKCQgIEhsCAgEBBQUCAQcIAgICJwFyYnkCFwLhBB0bGwFXOEQEAzYlJx0eDgwAAAEA5wGIAY0C/QASAAATNDY7AR4BFTAVBwMGKwEiJyYn5xsSURAXARUIJCISDQ0BAtATGgIZDwEB/twlCwoRAAABANP/+AHpAwAAGQAAEzU2NzYzMhYVFAcGBwYHFRQXFhUUBiMiJybTA80LDhIbFE4sLQGoFBsSDgvQAXMG8I8IGhMXDjNKS20FvmsOGBMaB4wAAAABAIj/+AGfAwAAGAAANzQ3NjU0LwEmJyY1NDYzMhcWFRQHBiMiJogUqakBBwYGGxIOC9HRCw4SGyUYDm7AwnMBAgwMChIbCJDv7I4HGwAAAAEARACeAi4ChQAqAAATNDc2Mxc1NDYyFh0BNzE2MzIWFRQPARcWFRQGIyIvAQcGIyImNTQ/AScmRA4OEZsbJBuNBggSGyB6UAUaExQMV3AMFBMaCV6MHwG+Eg8OM54TGhsSni4DGxIgCymICwwTGguWlgsbEg0Ofy4MAAABAEQAagIuAo0AGwAAEjQ2OwE1NDYyFh0BMzIWFAYrARUUBiImPQEjIkQbEpsaJhqbEhsbEpsbJBubEgFpJhq3ExobErcbJBu4EhsaE7gAAAEAcv9NAeYAygASAAAXNDcTNjsBMhYdARQHAwYrASImcgWyDBVvEhsN/gwUHBMahgwKAS4MGhMfEwz++w0aAAABAEQBQQIuAbcADwAAEzU0NjMhMhYdARQGIyEiJkQaEwGQExoaE/5wExoBbhwTGhsSHBIbGgAAAAEAxP/7Aa0AtgAPAAA3NTQ2OwEyFh0BFAYrASImxBsSjxIbGxKPEhsoYRIbGhNhExobAAABAID/+AHyAwAAEwAANzQ3MwE+ATMyFhUUByMBDgEjIiaAAwEBGAQYDRIbAwH+6AQYDRIbJQoHAq4MEBsSCgf9UgwQGgAAAAACAD//+AIfAv8AJQBUAAAFIyYnLgEnJicmNTQ2Nz4BNz4CMzIeARceARceARUUDgUDFRQWFxYXHgE7ATI2Nz4BNz4BPQE0JicmJyYnJicmJyYnLgEjIg4CBw4BBw4BATMEOywsNA8QBQUDBgYVEhIySC4tSDITEhUGBgMEDRQmMEbFBQkIEBA4KBUcLA0OEgQFAwEBAQMDBQUICAsMDg8nGBknHhcICAoCAgMIARMSOy8vMC9AOVEvMEEhICYYGCYgIUIvL1I4KEFMOTYkFgGwUi1AJSUXGB8XFhUxHyA0Hy4fJRwdEBEXFw4ODw8ICQoLFB0SESkXFi8AAAABAF7/+wGMAv0AFQAAEiY1ND8BNjsBMhYVERQGIiY1EQcGI3gaDbcNECASGxskG4kNEQIJGxIVCp0LGxL9WBIbGhMCYXULAAABAFAABgILAwAANwAAEiY1NDc2MzIXFhUUBw4BBw4BBw4BBwYHBgcVITIWFAYjISImPQE0NzY3Njc2NzY1NCcmIyIHBiNrGxNbcVs9Pg0NISAgISMmIhgYCwsCASgTGhsS/qoSGwoRLy9EXhkcJSM0Wj4LDwJyGxEZDTw6OV0lIiMsGxsYFxkaGhkgHysFGyQbGxIVTiI8LzAuPyQkKDUhICwIAAEAP//4AhYC/AA3AAA3JjU0NjMyFxYzMjc2NzU0JyYnJiMiJjU0PwEhIiY0NjMhMhYdARQPARcWFxYdAQYHBiMiJyYnJlQVGxIGC0BGTDQ1BCAeLCs1ERoJuP7nEhsaEwFhEhsOoQhVNjUFUE5wHBwcIyMeEBgTGwQdJidKCjMkIw8OGxMSCswbJhobEiQQDrECFjs7WRBtQEADAwcIAAABAD//+wIfAv0AKAAANiY9ATQ3Ez4BMzIWFRQHAzM1NDYyFxYdATMyFhQGKwEVFAcGIiY9ASNaGwXVBBYMEhoFyMMaIg0OOhMaGxI6Dg0iGvWpGhMrCAsBzwsPGxIKCf5GeRIbDg0SeRskG4ESDQ4bEoEAAAIAWf/4AfcC/AAqAC0AABYmNDYzMjc2NTQnJiMiByMiJj0BEz4BMyEyFhQGKwEHMzIXFhUUBwYHBiMSIjN0GxsSyjsSIi1xHyAEEhsOAhkSARwTGhsS8ggTf01OFxgkYL4YAQEIGicacSIfSSU1AxkSAwD/EhgbJBydQUB+NS4vIVoBrQAAAAACAD//+AIfAv0AHwAvAAA3Jic1NDc2Nz4BNzYzMhYVFAcGDwE3NjMyFxYVFAcGIgMGFRQXFjMyNzY1NCcmIyKFQwNFHCgnNjILFBEaC3E1BwsdHm1BQkRE0AYoKilDQikrJyZJRzlBawx9ci80NT85DRsSEQ6ATQoCBkRFdGlCQgFkK0xEKCcoKENOKisAAAABAD//+wIfAvwAHwAAEiY0NjMhMhYVFAcGBwYHBhUUBiImNTQ3Njc2NzY/ASFaGxoTAYYTGjsSNDQWQRoiGkwXNDURGAkC/q8CoRsmGhsSTFkcQUIpeMETGxoU2o0pRUYaKBQHAAAAAAMAP//3Ah8DAAAVACQAQgAAEwYVFBYXHgEXOwE2NzY3PgE1NCcmIhMGFRQXFjsBMjc2NTQvAQMmNTQ/AScmNTQ3NjMyFxYVFAcGDwEXFhUUBgcjIuEmEhUUGxwCAhwODhQUEiYlUimXLSpAFDUmJ5ICrUWOBgZsQD9PTkBAHB0zBgaOdFIqZwKSFCYZJhAPEA4NCAgPECcZJhQU/s9PXjgfHyMjMF9OAv67Olx5YgQEQmtJLzAwMEg7KSghBARieU96BwACAD//+wIfAwAADwAtAAATBhUUFxYzMjc2NTQnJiMiAyY1NDc2MzIXFhUUBwYHBgcGIyImNDc2PwEHBiMixSwqKER3FQoqKUM/bURIRmJlRUYVFSZTeA0PERoOX0QFChogagJ1MENBKShJIShLLC3+tENlaEtLRkZyRzk5QpFvDBomDltuCgIEAAAAAAIA1v/7AZwCEAAPAB8AADc1NDY7ATIWHQEUBisBIiYRNTQ2OwEyFh0BFAYrASIm1hsSbBIbGxJsEhsbEmwSGxoTbBMaKFATGhsSUBIbGgF+UBMaGxJQEhsaAAAAAgBv/1IBswIQABIAIgAAFzQ/ATM2OwEyFhUUBwMGKwEiJhM1NDY7ATIWHQEUBisBIiZvA3wBCR9vEhsBzA4RKxIbexsSbBIbGhNsExqBDAf9GRsSDgP+9Q0aAidQExobElASGxoAAAABAEEARQIuArMAHQAAEy4BJyYnLgE1NDcBMDE2MzIWFRQHDQEWFRQGIyInTwEGAQECAQIOAZkLDhIbDf6hAV8NGxIOCwFcAQUBAgMECAcREAEPCBsSFwnq6g4SEhsIAAACAEQA3QIuAhsACwAXAAA2NDYzITIWFAYjISImNDYzITIWFAYjISJEGxIBkBIbGhP+cBMaGhMBkBMaGxL+cBL3JhobJBv+JhobJBsAAQBBAEUCLgKzABcAAAkBBiMiJjU0Ny0BJjU0NjMyFzAxARYVFAIg/mcLDhIbDQFf/qENGxIOCwGZDgFc/vEIGxISDurqCRcSGwj+8RAREgACAGD/vAH1AwEAOQBLAAATNTQ2NzYzMhcWHQEOAQcGBwYHBhUUBwYiJjU0NzY3Njc2NzY3NjU0JyMiJyYrAgYdARQHBiMiJyYTNTQ2OwEyFh0BFAcGKwEiJyZgPi8vNlA6OQEsHwcUFgkJDg0kGwoKCwwUFQgSEBFTAQUICgQDAW4NDRMSDQ2UGxIuEhsODRIuEg0OAjQMPFsVFTAwWAIxZCMIExQOCwsUDw8dFRoYFw4OFBUKEyIiG0IVAQIOUgkUDw4ODv3MMRUdHRUxFA8PDw8AAAIARP/yAi4DBABKAGUAADc1NDcyHwE3NjMyFxYVERY7ATY3Njc+AT0BNCYnLgEnJicmKwEGBw4BIyInJj0BNjc2NzMyFhcWFx4BHQEUBwYHBiMiLwEHBisBJjcUFxYXHgEXMzI3Njc9AiYnJiMiBwYHDgEVRIgvJwUCDhkSDQ4CHAETDQwEBQMDBQUXEBEbGyMJggsCGRETDQ0MPT9eCTpZGxsREQ0KCiMmNzYdAwQrPQiMWgEBBQQYEwYcEQ8NDRcXHBALCgMEAtIB7wIdAwUYDw8T/vk2AQwNFhUmHZgqPyYlNBcYDAwGVxIYDg8VB1ItLgMqIyM1NXBGfFsxMCInJgQDKAXWGw8QFBUVAREQHQGMARoTFAwMFhQiGAAAAAIARf/1AhoC9gAZABwAABYmPQETPgE7ATIWFxMUBwYjIiYvASMHDgEjEwMzYBufBBgOQg0XA6MODhIPGQMtyywDGQ+9T54LHRUOAp4OFREM/U0TDw8VD8PDDxUCov6qAAMAPwAGAh8C/QAhACsAOQAANiY1ETQ3NjsBMhcWFxYXHgEVFA8BFx4BHQEUBgcGBwYrARMVNzI9ASYnJiMDFRcyPQEmJyYnJicmI1obDQ0TpyQVFR4dFiwyOgQEIicnJCUvLz6nLXqyASspQZaWiAMODRgYGRkkBh0VApIWDw4BAgcIDRxiOVo4BAQeWDACMlkfHwsLAVr1AXwBPh0cATrVAWMLIRUWCwoDBAABAG//8gHwAwsARQAAEyYnNTQ2NzY3Njc2NzMyFxYXFRQHBiMiJyYnJicwMSYrAQYRFR4BFxYXFhceATMyNzY3PgEzMhcWHQEGBwYjIicmJyYnJnYGAQ0QERkYJyQvBTsuLQ0NDRITCQsICQsVHQWBAQQFBAoJDg4tHBwTFgQDGRASDQ0KLS09MiUoGBkREQD/NT8OQGw0MyUkFhYCJiY9ChQPDw0NFRYKEgf+6RIlOiMkGhoXFxoPDxoSFw8PFAo8JiYVFSQkMzMAAAACAHIABgIFAv4AFAAhAAA3JjURNDc2MzIXFhcWFRQHBgcGIyITJxE3Njc2NTQnJicmgA4NDRNmQ0M1RUhGayJLEkUGBmU5OyEgMysVDxUCkxQPDyssTmiFi19eFwcCkQH91AELQUB1UkFAKyQAAAAAAQBtAAYCEwL7ACIAADYmNRE0NzYzITIXFhQGIyEVMzIXFhQHBisBFSEyFxYUBiMhiBsNDRMBTBMNDRsS/uHvEg0ODQ0T7wEfEw0NGxL+tAYdFQKRFQ8ODg8qHdQPDykPDvUODyodAAABAKD/9QICAvoAHgAANyY1ETQ3NjMhMhcWFAYrARUzMhcWFAcGKwERFAcGIq4ODQ0TAQgTDQ0bEtuuEg0ODg0Srg4NJAQPFQKgFA8PDg8qHdQPDygPD/7KFQ8PAAEAR//xAg4DCAA+AAA3Jj0BNDc2NzYzMhcWFxYVFAYjIicmIyIHBgcGFRQXHgEzMj8BNSMiJyY0NjsBMhYVERQHDgEHDgEHBiMiJyZeFxcXLEZeExNYNwsbEhQOK0M+Kh8PEBwSTDUuMgNyEgwNGhGfEhsHCBIREhEQLC5sQivEV2MDYVNUME8DEEgOExQdETYxJD4+SWlYODoUAckODykdHRX+6Q4LDA4ICAYFDk0wAAAAAAEAW//1AgIDBAAdAAAWJjURNDc2MhYVETMRNDc2MhYVERQGIiY1ESMRFAZ2Gw4NJBvzDg0kGxskG/MbCx0VAqoVDw8dFv7lARsVDw8dFv1WFR0dFQEt/tMVHQAAAQB4AAYB5gL6ACMAADcmNDc2OwERIyInJjQ3NjsBMhcWFAcGKwERMzIXFhQHBiMhIoYODQ0TYEwSDQ4NDRPsEw0NDg0STGATDQ0ODRL+7BIVDykPDgIsDw8oDw8PDygPD/3UDg8pDw8AAAAAAQBQ//ABpQMHACMAADYmNTQzMhcWHQEGFRQXFjMyNzY1ETQ2MhYVERQXFBUUBiMiJ4Y2MBMMDQIcGiAeFRcbJBsBZ0EpJyBXN04ODxUKDAQpGhoYGS0CJBUdHRX95wMFBAJMchcAAAABAE3/9QIfAwcAHwAANyY1ETQ2MhYVEQE2MhYUBwMBFhUUBwYjIicBERQHBiJbDhskGwEUDiQbDvwBEw4ODRITDf7VDg0kBA8VAq0VHR0U/ucBOw8dKRD+3P6+ERIVDw8OAVv+yRQPDwAAAAABAFsACwIfAwcAEwAANyY1ETQ2MhYVESEyFxYUBwYjISJpDhskGwE9Ew0NDg0S/pYSGg8UApkUHR0U/ZkPDygPDwAAAAEAP//1Ah8DBAAoAAAWJjURNDY7ATIXFhcbAT4BOwEyFxYVERQGIiY1EQMGBwYjIiYnAxEUBlobGxJNDgwLBE1NAxgOTRINDhskG2wGCwoPDhcEbRsLHRUCqhYdCgsO/uUBGw4VDw8V/VYVHR0UAmv+cxAKChQPAY79lRQdAAAAAQBN//UCEQMIAB8AADcmNRE0NjsBMhYXExE0NjIWFREUBwYrASInAxEUBwYiWw4bEiUMFwXwGyQbDg0SJhwM7w4NJAQPFQKtFR0PDf3JAiMUHR0V/VMVDw8bAjf93xQPDwAAAAIAQv/yAhwDBwAeADkAADYmPQE0PgE3Njc2MzIXFhceAR0BFAYHBgcGIyInJicSBh0BFBYXFhcWMjc2Nz4BNTQmJyYnJiIHBgdkIhEmHRsoJy81LS4eHiEhHR4uLTY1LS4eLBESEREdHkgeHREREhERER0eSh8dEKuLRwM2bWcnJxcYIiE4OItJA0eLOjkjIyMjOQGdYSwELmItLx4fHx4vLWMtMWQtLR0dHh4vAAAAAgBb//UCHwL8ABUAHwAANyY1ETQ3NjsBMhcWFRQHBisBERQGIhMVMzI3NTQnJiNpDg0NE6hoQ0QmPYx7GyQ/e5AFKSdFBA8VAqEVDw85OWxRNVj+6BYdAqP1dAdEGxsAAgBB//UCHwMIACMAQwAANyY9ATQ3Njc2OwEyFxYXHgEVFA8BFxYVFAYjIi8BBwYjIicmEgYdARAzMj8BJyY1NDc2MzIfATc2NTQnJicmIyIHBgdfHh4ZMzFBCDYrKxsbHTACQwocEhYKOAQ1Oz03OTIMhSAeBGAKDQwRFwpRAxQPDyEiLiUbGw3DUYMDgk1BLy8fHzU1gUeMZAJfDxEUHg5SBC4uLwGzTS0D/tgZA4sPEBQPDw52CkFLRjs8KSkWFSUAAAIAZ//1AggC+AAkADEAABYmNRE0NzY7ARYXFhcWFxYHBgcGDwETFhUUBwYjIicDIxEUBwYTFTcyNzY3NjU0JyYjghsNDROfKiMkHx4REQEBICFCBYoFDg0SFgueWw4NG242GhoKCiUiOAsdFQKeFg8OAQoLFRUnJjRfOjobAv77ChEUDw8NAT7+6BUPDwKk9QIaGRwcLDAWFgAAAAEAYf/wAf0DBwBRAAA3Jic1NDYzMhYXFhcWMzI3NjU0JyYnLgEnLgInJicmJyYnJjU0NzY3MzIXFhcWFRQHBiInJicmJyYjIgcGFRQXFhcWFx4BFx4CFRQGBwYjIqU6ChsSERoCBiEfKTAlJAcHDg0WEw45IhoaDxAQDwgHPDxPBkcyNBECDQ0mCwwJCgobMC0jJBUTJBAjIyceHSEXZksSEkkiMk0IFB0YEi0YGCAcOxgUEw4OEQoIHxUQERARFxcdHCNSNTYCJydDCAQUDw4NDhUYChoZGSotGBgUCxITFxcWLUQpVXQOAwAAAQA///UCHwL4ABgAABMmNDc2MyEyFxYUBwYrAREUBwYiJjURIyJNDg0NEwGGEw0NDg0SmA0NIhqYEgKiDyoPDg8PKQ8P/ZQUDw8dFQJsAAABAE3/8gIRAwgAIAAANyY1ETQ2MhYVERQXFjMyNzY1ETQ2MhYVERQHBgcGIicmZRgbJBsyHzc+JCYbJBsYGCw1ojUscDY9AfMVHR0V/g1RJhcmJkEB8xUdHRX+Dj02NiAoKCAAAQA+//UCIAMGABgAADcDNDc2MzIWFxsBPgEzMhcWFQMOASsBIibjpQ4OEg8ZA5iXBhcPEg4OpwMYDkIOGhkCvBQODxUO/YACgA8UDw8T/UQPFRYAAQA///QCHwMFAC8AADcmAzU0NjIXFhcSHwE3NjsBMhcWHwE3NhM0NjMyFh0BAgMOAQcjIi8BBwYrASInJn4xDhskDQ0BCxgDPwsdEQ4LDAQ+AxkKHBIRHA4yAxkQBTQNPj8KIBsRDAwb9AHFAhQbDg8U/r+4GfUhCgsO6xjBATEUHR0TAv5G/wAOFgEw6/giCwsAAAEAU//1AgsDBgAlAAAWJj0BNDcTAyY1NDYzMhcbATYzMhcWFRQHAxMWFRQGIyInCwEGI24bBaCaBRsSFAyJgRMVEg0OBZqgBRsSFQ2NhxIWCx0VAQ8KAUYBMgwOFh0N/u0BBRsPDxUODP7O/roKDxUdDQEj/ukaAAEAVv/0AggC+QAeAAATJjU0NjMyFxsBMz4BMzIXFhUUBxUDERQGIiY1EQMwWwUbEhkPhIQBAxgMEg0OBakaIhqpArAIDxUdG/7rARULEA8PFA8IAf6l/tEUHR0UAS8BWwAAAAABAFsABgICAv4AHgAANyY1NDcBIyInJjQ3NjMhMhcWFRQHASEyFxYUBiMhImkOBQEL4BINDg0NEwEoEg0OBf73AQMTDQ0bEv6zEhUPFA4KAkkPDykPDw8QFA0K/bcPDyodAAAAAQCl//gCHQMAABUAADcRNDYzITIWFAYrAREzMhYUBiMhIialGxIBHhIbGhPx8RIbGxL+4hIbJQKuEhsbJBv9rBskGxsAAAAAAQCA//gB8gMAABQAABM0NjMyFhcBMDMWFRQGIyInATAjJoAbEgwZBAEYAQMbEh4L/ugBAwLTExoQDP1SBwoSGxwCrgcAAAAAAQBV//gBzQMAABUAADY0NjsBESMiJjQ2MyEyFhURFAYjISJVGxLx8RMaGxIBHhIbGxL+4hITJBsCVBskGxsS/VISGwABAEQBdAIuAvsAGAAAEzU0NxM2NzIXEzAxFhUUBiMiLwEHBiMiJkQHzg8QGAnNCBsSEw2pqAwTEhsBoQoOCwErCgEM/swLDhIbDbKyDRoAAAEARP8ZAi7/kAAPAAAXNDYzITIWHQEUBiMhIiY1RBsSAZASGxsS/nASG50TGhsSHRIbGhMAAAAAAQC2AgcBuQMAABIAAAEnJjU0PwE2MzIfAhYUBwYjIgFvqRALDw0XDgoDnwsLDRURAhGODRUQDRIQCQKmDh4NDwAAAAACAE3/7wH6AiAADQA/AAAlIhUUFxYXMzI/ATUjJgcmNTQ3Njc2NzY3PgE7AScmJyYjIgcGIyImNTQ3NjMyFxYVERQGIiY9AQcGIyIjJiMmAVixHRodCFZGAQUr7zQNDBkaHR0pKUQyBgEGGRo5PC4MEBMaEU9TWzU8GyQbCERPAgYFBD/3YCEVFQJ6ATAC1C9FKh8fExMMDQYGBAY/GRonCRoTFg06MjpY/sUSHBoTEwc9AQUAAAAAAgBK//ACHwMFAB4AMgAAFiY1ETQ2MhYdATc2MzIXHgEXFRQHBiMiJyYvARUUBjcVFhcWMzI3Nj0BJicmIyIHBg8BZRsbJBsIQkoYIE9fATo5aBEIRDsIGxsUKysxJSFAAiUlNxsdQCUBDRsTArcSGxoT+QY2CBV/XweBVVMBBzAGDhMa0gExJSUXLYgJQDIzDh9NAQAAAAABAHX/7gHwAhoAKgAANyY1NDc2MzIXFhcWFxUUBiMiJyYjIgcGFRQzMjc2Nz4BMzIWHQEGBwYjIuVwNTVjExQwIyMLGRMfDAw+JRg9bBIPMQsDGRASGg4yNDwwBz7NeElHAwYbGyoLExokIw0fgsoEDCsOFRsSCzckJQAAAgA///ECEwMFAB4AMQAANyY1NDc2NzYzMh8BNTQ2MhYVERQGIiYvAQcGIyInJhMGFRQXFjMyNzY3PQImJyYjImwtLy5RHBhKRggbJBsbJBoBAQc/TxocVUA/IiI9HB5MGRUpKTAoVEpvZkVEFwg1BvgSGxoT/UkUGhoRCgYxBhQBnCxuTzs8DiBQAYUBLyMjAAAAAAIATf/xAhECIAAkAC0AADcmNTQ3NjczMhcWFRQGIyEXFhcWMzI3Njc2MzIWFRQHBiMiJyYTByEnJicmIyJ2KT49ZgZoOjsbEv7EAQclJEMREh4UDBITGy0tPzMmTA8CAQQBCxwcPGNgSmhzTUwCR0dzEhwGSyssAwQVDRoTKxQVDRoBOgcGPBwdAAAAAQBh//MB/QMCACMAABImNDY7ATU0MzIWFAYjIgcGBwYdATMyFhQGKwETFAYiJjUDI3saGxJxzhIbGxIsICAJBHwSGxsSfAYaIhoFcQG7GyQbDt8bJBsPECINNw4bJBv+ZhIcGxMBmgACAEL/QgIGAhsANABJAAA3JjU0NzYzMhcWHwE3PgEzMhYVERUWHQEUBwYjIicmJyMmNTQ2MzIXFhcWMzI3Nj0BBwYjIhMGFRQXFjMyNjc2NzY/AT0BJicjIns5OjlmDwg/MgcBARsREhsBOzxhTjAwFQEDGxIUEBEKFkVbGAoIPlJfCCAfHjocMRISDAsPAStVDUJbR2t4S0sBBikGChEYGxP+UQEJDBdeNzcTEzEHCxMaFRgFCjgXLDsHNwF8L09CLC0UFBMQEBkCVgF3BgAAAQBq//MB9AMFACkAABYmNRE0NjIWHQE3NjMyFxYXFh0BFAYiJjURNCc0Jy4CIyIHBg8BERQGhRsbJBsIOUo4KioPChskGwEEBBAdFTEgHxoBGw0aFAK3ExobEvUHMSMjNyVb/RIcHBIBCxsRERUXGRMhHzMB/tQSHAAAAAIAg//zAZQDBQAQACAAABImNDY7ATIWFREUBiImNREjNiY9ATQ2OwEyFh0BFAYrAZ4bGhO0ExobJBuHeBsbEi0SGxsSLQGoGyQbGhP+SxMaGxIBiNUaEy4TGhoTLhMaAAIAZ/9JAZQDBAAPADQAAAAmPQE0NjsBMhYdARQGKwEDIj0BNDc2MzIXFjMyNzY3NjURIyImNDY7ATIWFREUBwYHBgcGASgbGxItEhsbEi10Xw4PFQQQEAoICD0UCmUSGxoTkhMaERMdHSciAnwaEy4TGhoTLhMa/M0uCREKCwECAQQtFkkBdBskGxsS/lJVJCUbGgYFAAAAAQB7//MCBQMFACEAABYmNRE0NjIWFREzNzM2MzIWFRQPARcWFRQGIyIvASMVFAaWGxskGwq7AQ0REhsOqssMGxIVC9kKGw0aFAK3ExobEv6Asg4cEhQNpOUOERIcDfTUEhsAAAEAy//5AfADBQAYAAA3JjUTNDYzMhYVAxQXFhcWMzIWFAYjIicm9CkGGhMSGwcQES8PQBIbGxJTMC48N28B9RMbGxP+Cj8iJAcCGyQbDQ4AAQA///MCHwIbADIAABYmNRE0NjMyHwE3NjMyHwE3NjMyFhURFAYiJjURJiMiBwYVERQGIiY1ESYjIgcGFREUBlobGxIXDgMEIig4JAMEKTQ2RxskGwIhHxUUGiIaAiAgFRQbDRsTAckTGxUEAxktBQUtTzX+ihIcGxMBbzEvLif+5BIcGxMBbzEwLib+5BIcAAAAAAEATf/zAhECGwAjAAAWJjURNDYyFh0BNzYzMhcWHQEUBiImNRE0JyYjIgcGBxURFAZoGxskGwhDWGUxMRskGxcXPzsoKBgbDRwSAckSGxoSFAc9Q0N3/RIcGxMA/08oKiopOwH+7xIcAAAAAAIAP//wAh8CIAAPABsAADcmNTQ3NjMyFxYVFAcGIyIDBhQXFjI3NjQnJiKAQUFAb2xCQkJBbW4BJycmkiYnJyeQPk96e09PT1B6eU9PAaA2pjU1NTWmNjYAAAAAAgBK/0gCHwIbABUAMwAANxcWMzI3NjU0JyYjIgciIzEGBwYHFQImNRE0NjIWHQE3NjMyFxYXFhUUBwYrASYvARUUBqQBPlQPFWohIUQDBAMDLyUlFUAaGyQbCD5LGSFWLS09PGkRRjoIGssBgAUdlVQ2NwEDJCMvAf4BGxICdRMbGhMLBzQIFkZHb3dNTQQxB7cTGgAAAAACAD//SAITAhsAHAAvAAA3JjU0NzYzMh8BNTQ2MhYVERQGIiY9AQcGIyInJhMGFRQXFjMyNzY3PQImJyYjIm0uryEZSz4IGyQbGiYaCD5OHBtTPT8jIzwZIEIjFygpMSNQRmvmLAg0BwsSGxsT/YsTGhsStgc0BxMBoCiBSzY4DR1VAX0BMiQlAAAAAAEAmv/zAg4CGwAnAAAWJjURNDYzMhYdATc2MzIWFxQGIiYnNCcjIicmIgcGKwEGBwYdARQGtRsbEhMaCDdPPE8BGyQaASMBAgQFBwcGAwE3ICIbDRwSAckSGxkTCwc0TTgTGxoSIggBAgIBCTg3QOUTGwAAAQBn//AB/QIgAFEAADcmNTQ2MzIXFhcWMzI3NjU0JyYnJicuAicuAScmJyYnJjU0NzY7ARYXFhcWFRQGIyImJyYnIyIHBgcGFRQXFhceARcWFxYXFhcWFRQHBgcjImwFGxITEhUJITIwIyYPDgwKFgs5GhkaGRISCQgHBzg4Uh02LC0MAhsSEBkDCEAZGxMUEhQ+Dx8gIhwdDxAREQcHOjxYCYVFCA8TGhUYBBESEyYTDg0EBQYDDwgJCQ8ODg8OFhUZTiUmAxsbLwkDEhsTDiIEAwIODxswEgQHCAsKCQwLEREWFx1SJygCAAABAE3/8wHjAqYAMQAAEiY0NjsBNzQ2MhYVBzMyFhQGKwEHFBUWFx4COwEyNzYzMhYVFAcGIyInJicmPQE3I2gbGxJSARkkGAKWEhsbEpcDAQMEDRsUAhAcGw0SGyMlNCofLxQUA1ABshslG2wUGRsSbBwkHO0aDQwTExENCgobEiAQEQwTLi9MDOsAAAEATf/wAhECGAAoAAA3Jj0BNDYzMhYdARQXFhczMjc2NzERNDYyFhURFAYiJj0BBwYrASYnJlcKGxESHBUVQwU7KCYVGyQbGyQbCEFYBEgwMYEmS/gSHBwS6lwrLQIsKz8BChMbHBL+NxIcGhMSBzsBJyYAAQBC//MCHAIYAB0AABMmNTQ2MzIXEzMTMDU+ATMyFhUUBzEDDgErASImJ0UDGxIfC5EKkQMZDhIbA54DGQ1GDhcEAdsGCRMbH/5eAaIBDBIcEgkG/jYMEhENAAABAEH/8wIeAhgAKAAANwM0NzYzMhYXEzc+ATsBMh8BEz4BMzIXFh0BAw4BKwEiLwEHBisBIiZ4Nw4OEhEZAiorAxcPLCAKKikDGRESDg44AhkRMCAJMTELHTERGhsBzxMNDhcR/qSWDRMglgFcEBgNDRAE/jEQGB+wryAYAAAAAAEAYf/zAf0CGAAjAAAWJjU0PwEnJjU0NjMyHwE3NjMyFhUUDwEXFhUUBiMiLwEHBiN8GwiMgQcbEhcJdXUNExIbB4KMCRsSGAmAgQwUDRwSDg3OxgwOExsMtbUMHBIODMbODg0SHAy/vwwAAAEAP/9JAh8CGAAjAAAWJjU0NjsBMj8BAyY1NDYzMhcbATYzMhYVFAcBMDEGBwYjIidTFBsSEBYHa78GGxITDaicDhQSGwX+zQ0dHSMNDrEZEBMaEMsBVAkNExsM/tcBKQwbEw0K/bccEhMDAAEAYQAEAgUCBwAcAAA2Jj0BNDcBIyImNDYzITIWHQEUBxUBITIWFAYjIXsaDAEU6hIbGhMBKhMaDf7zAQQSGxoT/rYEGxIjDw4BPBomGhoTKBEMAf7KGyQbAAAAAQBE//gCLgMAADQAABI0NjMyNzY9ATQ3Njc2MzIWFAYrASIHBgcGFRQPARcWFRQXFhcWMzIWFAYjIicmNTQnJiMiRBsSVhcRJiE0NmESGxoTIjUdHxEUMQUEMgcIGhd4EhsbEpAtVRYYUBMBaCYbGxQ9CmM1Lg0OGyQbBgYYGkl7JQMFMWE3Hh8RDhskGxsznzsXGAAAAAABAQz/ZAFmAwAACwAABRE0NjIWFREUBiImAQwbJBsaJhpvA0ITGhsS/L4SGxoAAAABAET/+AIuAwAAMwAANjQ2OwEyNzY3NjU0PwEnJjU0JyYnJiMiJjQ2MzIXFhcWFRQXFjsBMhYUBiMiBhUUBwYjIkQbEiE9HyIOCjIEBTENDScVYRMaGxJhNjQhJRIXUgQSGxsSUC9UK5ISEiYaCQkgGUhhMQUDJXs1HyELBxomGg4NLjNlRhUbHCQaLzufMxsAAAAAAQBSAhwCIALNACsAABM1Njc2MzIzFjMWFxYzMjc+ATMyFhUUBxUOASMiIyYjJicmIyIHMQ4BIyImUgonJzACBQQDLj4rICAIAxoPEhsCCkwwAgUEAy4+KiAgCQMZEBIbAlUKMB8fAQUvIicPFRsSAwUBMD8BBDAhJg8VGwAAAAABAnIB9QLWAq8ACwAAATU0NjIWHQEUBiImAnIeKB4eKB4CJ1YVHR4UVhQeHQAAAAABAgYB9QKgAq8ADwAAATQ2MzIfARYVFAYjIi8BJgIGHhQbCTwIHhQTET0HAn0VHQ5fDQ4UHg9eCwAAAAACAbYCVALWAwIACwAXAAABNTQ2MhYdARQGIiY3NTQ2MhYdARQGIiYBth4oHh0qHbweKB4dKh0ChkoVHR4UShQeHRVKFB4eFEoUHh4AAQAO/4cAcgK1AAsAABcRNDYyFhURFAYiJg4eKB4dKh1HAsoUHh4U/TYUHh4AAAAAAAAOAK4AAQAAAAAAAABDAIgAAQAAAAAAAQAEANYAAQAAAAAAAgAHAOsAAQAAAAAAAwApAUcAAQAAAAAABAANAY0AAQAAAAAABQAKAbEAAQAAAAAABgAEAcYAAwABBAkAAACGAAAAAwABBAkAAQAIAMwAAwABBAkAAgAOANsAAwABBAkAAwBSAPMAAwABBAkABAAaAXEAAwABBAkABQAUAZsAAwABBAkABgAIAbwATQBhAHQAdABoAGUAdwAgAFMAawBhAGwAYQAgACgAMgAwADEAMQApADsAIABiAGEAcwBlAGQAIABvAG4AIABjAG8AZABlACAAYgB5ACAATgBvAHIAYgBlAHIAdAAgAFMAYwBoAHcAYQByAHoAIAAoADEAOQA4ADYALAAgADIAMAAxADEAKQAATWF0dGhldyBTa2FsYSAoMjAxMSk7IGJhc2VkIG9uIGNvZGUgYnkgTm9yYmVydCBTY2h3YXJ6ICgxOTg2LCAyMDExKQAATwBDAFIAQgAAT0NSQgAAUgBlAGcAdQBsAGEAcgAAUmVndWxhcgAARgBvAG4AdABGAG8AcgBnAGUAIAAyAC4AMAAgADoAIABPAEMAUgAgAEIAIABSAGUAZwB1AGwAYQByACAAOgAgADIANwAtADkALQAyADAAMQAyAABGb250Rm9yZ2UgMi4wIDogT0NSIEIgUmVndWxhciA6IDI3LTktMjAxMgAATwBDAFIAIABCACAAUgBlAGcAdQBsAGEAcgAAT0NSIEIgUmVndWxhcgAAVgBlAHIAcwBpAG8AbgAgADIAIAAAVmVyc2lvbiAyIAAATwBDAFIAQgAAT0NSQgAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABmAAAAAQACAAMABAAFAAYABwAIAAkAtwALAAwADQAOAA8AEAARABIAEwAUABUAFgAXABgAGQAaABsAHAAdAB4AHwAgACEAIgAjACQAJQAmACcAKAApACoAKwAsAC0ALgAvADAAMQAyADMANAA1ADYANwA4ADkAOgA7ADwAPQA+AD8AQABBAEIAtgBEAEUARgBHAEgASQBKAEsATABNAE4ATwBQAFEAUgBTAFQAVQBWAFcAWABZAFoAWwBcAF0AXgBfAGAAYQECAQMBBAEFD3F1b3Rlc2luZ2xlLmFsdAlncmF2ZS5hbHQMcXVvdGVkYmwuYWx0B2Jhci5hbHQAAAAAAAAB//8AAgABAAAADgAAABgAAAAAAAIAAQABAGUAAQAEAAAAAgAAAAEAAAAKAEAAjgACREZMVAAObGF0bgAiAAQAAAAA//8ABQAAAAEAAgADAAQABAAAAAD//wAFAAAAAQACAAMABAAFYWFsdAAgc3MwMQAmc3MwMgAsc3MwMwAyc3MwNAA4AAAAAQAAABgAAQABABYAAQACABQAAQADABIAAQAEAAABAAAAAQEAAAECAAABAwAFAAwAFAAcACQALAADAAAAAQAoAAEAAAABAFIAAQAAAAEAVgABAAAAAQBaAAEAAAABAF4AAQAmAAQADgAUABoAIAACAAUAZAACAAoAYgACAEMAYwACAF8AZQABAAQABQAKAEMAXwABAAYAIAABAAEAQwABAAYAXwABAAEABQABAAYAWAABAAEACgABAAYABgABAAEAXwABAAAACgAsAC4AAkRGTFQADmxhdG4AGAAEAAAAAP//AAAABAAAAAD//wAAAAAAAAAAAAEAAAAAzD2izwAAAADWBtqRAAAAANoDIf0=");
-function bn(e, t) {
-	return cn($t, e, t);
+yn.loadFont("OCR-A", 100, 100, "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"), yn.loadFont("OCR-B", 96, 100, "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");
+function Sn(e, t) {
+	return un(tn, e, t);
 }
 // node_modules/jsbarcode/bin/barcodes/Barcode.js
-var xn = /* @__PURE__ */ o(((e) => {
+var Cn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	function t(e, t) {
 		if (!(e instanceof t)) throw TypeError("Cannot call a class as a function");
@@ -7009,7 +7013,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 	e.default = function e(n, r) {
 		t(this, e), this.data = n, this.text = r.text || n, this.options = r;
 	};
-})), Sn = /* @__PURE__ */ o(((e) => {
+})), wn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 }), e.CODE39 = void 0;
 	var t = function() {
 		function e(e, t) {
@@ -7021,7 +7025,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return function(t, n, r) {
 			return n && e(t.prototype, n), r && e(t, r), t;
 		};
-	}(), n = r(xn());
+	}(), n = r(Cn());
 	function r(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -7124,7 +7128,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return t %= 43, t;
 	}
 	e.CODE39 = s;
-})), Cn = /* @__PURE__ */ o(((e) => {
+})), Tn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t;
 	function n(e, t, n) {
@@ -7251,7 +7255,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		11010011100,
 		1100011101011
 	];
-})), wn = /* @__PURE__ */ o(((e) => {
+})), En = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -7263,7 +7267,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return function(t, n, r) {
 			return n && e(t.prototype, n), r && e(t, r), t;
 		};
-	}(), n = i(xn()), r = Cn();
+	}(), n = i(Cn()), r = Tn();
 	function i(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -7358,9 +7362,9 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		]), n;
 	}(n.default);
-})), Tn = /* @__PURE__ */ o(((e) => {
+})), Dn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
-	var t = Cn(), n = function(e) {
+	var t = Tn(), n = function(e) {
 		return e.match(RegExp("^" + t.A_CHARS + "*"))[0].length;
 	}, r = function(e) {
 		return e.match(RegExp("^" + t.B_CHARS + "*"))[0].length;
@@ -7391,9 +7395,9 @@ var xn = /* @__PURE__ */ o(((e) => {
 			return "Ë" + t;
 		});
 	};
-})), En = /* @__PURE__ */ o(((e) => {
+})), On = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
-	var t = r(wn()), n = r(Tn());
+	var t = r(En()), n = r(Dn());
 	function r(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -7422,7 +7426,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		}
 		return t;
 	}(t.default);
-})), Dn = /* @__PURE__ */ o(((e) => {
+})), kn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -7434,7 +7438,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return function(t, n, r) {
 			return n && e(t.prototype, n), r && e(t, r), t;
 		};
-	}(), n = i(wn()), r = Cn();
+	}(), n = i(En()), r = Tn();
 	function i(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -7466,7 +7470,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		}]), n;
 	}(n.default);
-})), On = /* @__PURE__ */ o(((e) => {
+})), An = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -7478,7 +7482,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return function(t, n, r) {
 			return n && e(t.prototype, n), r && e(t, r), t;
 		};
-	}(), n = i(wn()), r = Cn();
+	}(), n = i(En()), r = Tn();
 	function i(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -7510,7 +7514,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		}]), n;
 	}(n.default);
-})), kn = /* @__PURE__ */ o(((e) => {
+})), jn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -7522,7 +7526,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return function(t, n, r) {
 			return n && e(t.prototype, n), r && e(t, r), t;
 		};
-	}(), n = i(wn()), r = Cn();
+	}(), n = i(En()), r = Tn();
 	function i(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -7554,14 +7558,14 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		}]), n;
 	}(n.default);
-})), An = /* @__PURE__ */ o(((e) => {
+})), Mn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 }), e.CODE128C = e.CODE128B = e.CODE128A = e.CODE128 = void 0;
-	var t = a(En()), n = a(Dn()), r = a(On()), i = a(kn());
+	var t = a(On()), n = a(kn()), r = a(An()), i = a(jn());
 	function a(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
 	e.CODE128 = t.default, e.CODE128A = n.default, e.CODE128B = r.default, e.CODE128C = i.default;
-})), jn = /* @__PURE__ */ o(((e) => {
+})), Nn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 }), e.SIDE_BIN = "101", e.MIDDLE_BIN = "01010", e.BINARIES = {
 		L: [
 			"0001101",
@@ -7651,9 +7655,9 @@ var xn = /* @__PURE__ */ o(((e) => {
 		"LGLGGL",
 		"LGGLGL"
 	];
-})), Mn = /* @__PURE__ */ o(((e) => {
+})), Pn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
-	var t = jn();
+	var t = Nn();
 	e.default = function(e, n, r) {
 		var i = e.split("").map(function(e, r) {
 			return t.BINARIES[n[r]];
@@ -7668,7 +7672,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		}
 		return i.join("");
 	};
-})), Nn = /* @__PURE__ */ o(((e) => {
+})), Fn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -7680,7 +7684,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return function(t, n, r) {
 			return n && e(t.prototype, n), r && e(t, r), t;
 		};
-	}(), n = jn(), r = a(Mn()), i = a(xn());
+	}(), n = Nn(), r = a(Pn()), i = a(Cn());
 	function a(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -7785,7 +7789,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		]), i;
 	}(i.default);
-})), Pn = /* @__PURE__ */ o(((e) => {
+})), In = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -7807,7 +7811,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		if ("value" in i) return i.value;
 		var o = i.get;
 		return o === void 0 ? void 0 : o.call(r);
-	}, r = jn(), i = a(Nn());
+	}, r = Nn(), i = a(Fn());
 	function a(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -7894,7 +7898,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		]), i;
 	}(i.default);
-})), Fn = /* @__PURE__ */ o(((e) => {
+})), Ln = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -7916,7 +7920,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		if ("value" in i) return i.value;
 		var o = i.get;
 		return o === void 0 ? void 0 : o.call(r);
-	}, r = i(Nn());
+	}, r = i(Fn());
 	function i(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -7983,7 +7987,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		]), r;
 	}(r.default);
-})), In = /* @__PURE__ */ o(((e) => {
+})), Rn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -7995,7 +7999,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return function(t, n, r) {
 			return n && e(t.prototype, n), r && e(t, r), t;
 		};
-	}(), n = jn(), r = a(Mn()), i = a(xn());
+	}(), n = Nn(), r = a(Pn()), i = a(Cn());
 	function a(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -8043,7 +8047,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		}]), i;
 	}(i.default);
-})), Ln = /* @__PURE__ */ o(((e) => {
+})), zn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -8055,7 +8059,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return function(t, n, r) {
 			return n && e(t.prototype, n), r && e(t, r), t;
 		};
-	}(), n = jn(), r = a(Mn()), i = a(xn());
+	}(), n = Nn(), r = a(Pn()), i = a(Cn());
 	function a(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -8096,7 +8100,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		}]), i;
 	}(i.default);
-})), Rn = /* @__PURE__ */ o(((e) => {
+})), Bn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -8110,7 +8114,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		};
 	}();
 	e.checksum = l;
-	var n = i(Mn()), r = i(xn());
+	var n = i(Pn()), r = i(Cn());
 	function i(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -8206,7 +8210,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return (10 - t % 10) % 10;
 	}
 	e.default = c;
-})), zn = /* @__PURE__ */ o(((e) => {
+})), Vn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -8218,7 +8222,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return function(t, n, r) {
 			return n && e(t.prototype, n), r && e(t, r), t;
 		};
-	}(), n = a(Mn()), r = a(xn()), i = Rn();
+	}(), n = a(Pn()), r = a(Cn()), i = Bn();
 	function a(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -8343,14 +8347,14 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return r = "" + t + r, "" + r + (0, i.checksum)(r);
 	}
 	e.default = d;
-})), Bn = /* @__PURE__ */ o(((e) => {
+})), Hn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 }), e.UPCE = e.UPC = e.EAN2 = e.EAN5 = e.EAN8 = e.EAN13 = void 0;
-	var t = s(Pn()), n = s(Fn()), r = s(In()), i = s(Ln()), a = s(Rn()), o = s(zn());
+	var t = s(In()), n = s(Ln()), r = s(Rn()), i = s(zn()), a = s(Bn()), o = s(Vn());
 	function s(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
 	e.EAN13 = t.default, e.EAN8 = n.default, e.EAN5 = r.default, e.EAN2 = i.default, e.UPC = a.default, e.UPCE = o.default;
-})), Vn = /* @__PURE__ */ o(((e) => {
+})), Un = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 }), e.START_BIN = "1010", e.END_BIN = "11101", e.BINARIES = [
 		"00110",
 		"10001",
@@ -8363,7 +8367,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		"10010",
 		"01010"
 	];
-})), Hn = /* @__PURE__ */ o(((e) => {
+})), Wn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -8375,7 +8379,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return function(t, n, r) {
 			return n && e(t.prototype, n), r && e(t, r), t;
 		};
-	}(), n = Vn(), r = i(xn());
+	}(), n = Un(), r = i(Cn());
 	function i(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -8430,7 +8434,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		]), r;
 	}(r.default);
-})), Un = /* @__PURE__ */ o(((e) => {
+})), Gn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -8442,7 +8446,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return function(t, n, r) {
 			return n && e(t.prototype, n), r && e(t, r), t;
 		};
-	}(), n = r(Hn());
+	}(), n = r(Wn());
 	function r(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -8482,14 +8486,14 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		}]), n;
 	}(n.default);
-})), Wn = /* @__PURE__ */ o(((e) => {
+})), Kn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 }), e.ITF14 = e.ITF = void 0;
-	var t = r(Hn()), n = r(Un());
+	var t = r(Wn()), n = r(Gn());
 	function r(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
 	e.ITF = t.default, e.ITF14 = n.default;
-})), Gn = /* @__PURE__ */ o(((e) => {
+})), qn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -8501,7 +8505,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return function(t, n, r) {
 			return n && e(t.prototype, n), r && e(t, r), t;
 		};
-	}(), n = r(xn());
+	}(), n = r(Cn());
 	function r(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -8551,7 +8555,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return e;
 	}
 	e.default = s;
-})), Kn = /* @__PURE__ */ o(((e) => {
+})), Jn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 }), e.mod10 = t, e.mod11 = n;
 	function t(e) {
 		for (var t = 0, n = 0; n < e.length; n++) {
@@ -8574,9 +8578,9 @@ var xn = /* @__PURE__ */ o(((e) => {
 		}
 		return (11 - t % 11) % 11;
 	}
-})), qn = /* @__PURE__ */ o(((e) => {
+})), Yn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
-	var t = r(Gn()), n = Kn();
+	var t = r(qn()), n = Jn();
 	function r(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -8603,9 +8607,9 @@ var xn = /* @__PURE__ */ o(((e) => {
 		}
 		return t;
 	}(t.default);
-})), Jn = /* @__PURE__ */ o(((e) => {
+})), Xn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
-	var t = r(Gn()), n = Kn();
+	var t = r(qn()), n = Jn();
 	function r(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -8632,9 +8636,9 @@ var xn = /* @__PURE__ */ o(((e) => {
 		}
 		return t;
 	}(t.default);
-})), Yn = /* @__PURE__ */ o(((e) => {
+})), Zn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
-	var t = r(Gn()), n = Kn();
+	var t = r(qn()), n = Jn();
 	function r(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -8661,9 +8665,9 @@ var xn = /* @__PURE__ */ o(((e) => {
 		}
 		return t;
 	}(t.default);
-})), Xn = /* @__PURE__ */ o(((e) => {
+})), Qn = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
-	var t = r(Gn()), n = Kn();
+	var t = r(qn()), n = Jn();
 	function r(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -8690,14 +8694,14 @@ var xn = /* @__PURE__ */ o(((e) => {
 		}
 		return t;
 	}(t.default);
-})), Zn = /* @__PURE__ */ o(((e) => {
+})), $n = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 }), e.MSI1110 = e.MSI1010 = e.MSI11 = e.MSI10 = e.MSI = void 0;
-	var t = o(Gn()), n = o(qn()), r = o(Jn()), i = o(Yn()), a = o(Xn());
+	var t = o(qn()), n = o(Yn()), r = o(Xn()), i = o(Zn()), a = o(Qn());
 	function o(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
 	e.MSI = t.default, e.MSI10 = n.default, e.MSI11 = r.default, e.MSI1010 = i.default, e.MSI1110 = a.default;
-})), Qn = /* @__PURE__ */ o(((e) => {
+})), er = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 }), e.pharmacode = void 0;
 	var t = function() {
 		function e(e, t) {
@@ -8709,7 +8713,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return function(t, n, r) {
 			return n && e(t.prototype, n), r && e(t, r), t;
 		};
-	}(), n = r(xn());
+	}(), n = r(Cn());
 	function r(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -8752,7 +8756,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		}]), n;
 	}(n.default);
-})), $n = /* @__PURE__ */ o(((e) => {
+})), tr = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 }), e.codabar = void 0;
 	var t = function() {
 		function e(e, t) {
@@ -8764,7 +8768,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return function(t, n, r) {
 			return n && e(t.prototype, n), r && e(t, r), t;
 		};
-	}(), n = r(xn());
+	}(), n = r(Cn());
 	function r(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -8837,7 +8841,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		]), n;
 	}(n.default);
-})), er = /* @__PURE__ */ o(((e) => {
+})), nr = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 }), e.SYMBOLS = /* @__PURE__ */ "0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,-,., ,$,/,+,%,($),(%),(/),(+),ÿ".split(","), e.BINARIES = /* @__PURE__ */ "100010100.101001000.101000100.101000010.100101000.100100100.100100010.101010000.100010010.100001010.110101000.110100100.110100010.110010100.110010010.110001010.101101000.101100100.101100010.100110100.100011010.101011000.101001100.101000110.100101100.100010110.110110100.110110010.110101100.110100110.110010110.110011010.101101100.101100110.100110110.100111010.100101110.111010100.111010010.111001010.101101110.101110110.110101110.100100110.111011010.111010110.100110010.101011110".split("."), e.MULTI_SYMBOLS = {
 		"\0": ["(%)", "U"],
 		"": ["($)", "A"],
@@ -8925,7 +8929,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		"~": ["(%)", "S"],
 		"": ["(%)", "T"]
 	};
-})), tr = /* @__PURE__ */ o(((e) => {
+})), rr = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -8937,7 +8941,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return function(t, n, r) {
 			return n && e(t.prototype, n), r && e(t, r), t;
 		};
-	}(), n = er(), r = i(xn());
+	}(), n = nr(), r = i(Cn());
 	function i(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -9011,7 +9015,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		]), r;
 	}(r.default);
-})), nr = /* @__PURE__ */ o(((e) => {
+})), ir = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -9023,7 +9027,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return function(t, n, r) {
 			return n && e(t.prototype, n), r && e(t, r), t;
 		};
-	}(), n = r(tr());
+	}(), n = r(rr());
 	function r(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -9055,14 +9059,14 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		}]), n;
 	}(n.default);
-})), rr = /* @__PURE__ */ o(((e) => {
+})), ar = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 }), e.CODE93FullASCII = e.CODE93 = void 0;
-	var t = r(tr()), n = r(nr());
+	var t = r(rr()), n = r(ir());
 	function r(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
 	e.CODE93 = t.default, e.CODE93FullASCII = n.default;
-})), ir = /* @__PURE__ */ o(((e) => {
+})), or = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 }), e.GenericBarcode = void 0;
 	var t = function() {
 		function e(e, t) {
@@ -9074,7 +9078,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return function(t, n, r) {
 			return n && e(t.prototype, n), r && e(t, r), t;
 		};
-	}(), n = r(xn());
+	}(), n = r(Cn());
 	function r(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -9114,9 +9118,9 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		}]), n;
 	}(n.default);
-})), ar = /* @__PURE__ */ o(((e) => {
+})), sr = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
-	var t = Sn(), n = An(), r = Bn(), i = Wn(), a = Zn(), o = Qn(), s = $n(), c = rr(), l = ir();
+	var t = wn(), n = Mn(), r = Hn(), i = Kn(), a = $n(), o = er(), s = tr(), c = ar(), l = or();
 	e.default = {
 		CODE39: t.CODE39,
 		CODE128: n.CODE128,
@@ -9142,7 +9146,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		CODE93FullASCII: c.CODE93FullASCII,
 		GenericBarcode: l.GenericBarcode
 	};
-})), or = /* @__PURE__ */ o(((e) => {
+})), cr = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = Object.assign || function(e) {
 		for (var t = 1; t < arguments.length; t++) {
@@ -9154,7 +9158,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 	e.default = function(e, n) {
 		return t({}, e, n);
 	};
-})), sr = /* @__PURE__ */ o(((e) => {
+})), lr = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 }), e.default = t;
 	function t(e) {
 		var t = [];
@@ -9164,12 +9168,12 @@ var xn = /* @__PURE__ */ o(((e) => {
 		}
 		return n(e), t;
 	}
-})), cr = /* @__PURE__ */ o(((e) => {
+})), ur = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 }), e.default = t;
 	function t(e) {
 		return e.marginTop = e.marginTop || e.margin, e.marginBottom = e.marginBottom || e.margin, e.marginRight = e.marginRight || e.margin, e.marginLeft = e.marginLeft || e.margin, e;
 	}
-})), lr = /* @__PURE__ */ o(((e) => {
+})), dr = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 }), e.default = t;
 	function t(e) {
 		var t = [
@@ -9186,7 +9190,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		for (var n in t) t.hasOwnProperty(n) && (n = t[n], typeof e[n] == "string" && (e[n] = parseInt(e[n], 10)));
 		return typeof e.displayValue == "string" && (e.displayValue = e.displayValue != "false"), e;
 	}
-})), ur = /* @__PURE__ */ o(((e) => {
+})), fr = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 }), e.default = {
 		width: 2,
 		height: 100,
@@ -9208,9 +9212,9 @@ var xn = /* @__PURE__ */ o(((e) => {
 		marginRight: void 0,
 		valid: function() {}
 	};
-})), dr = /* @__PURE__ */ o(((e) => {
+})), pr = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
-	var t = r(lr()), n = r(ur());
+	var t = r(dr()), n = r(fr());
 	function r(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -9220,9 +9224,9 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return r.value = e.getAttribute("jsbarcode-value") || e.getAttribute("data-value"), r = (0, t.default)(r), r;
 	}
 	e.default = i;
-})), fr = /* @__PURE__ */ o(((e) => {
+})), mr = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 }), e.getTotalWidthOfEncodings = e.calculateEncodingAttributes = e.getBarcodePadding = e.getEncodingHeight = e.getMaximumHeightOfEncodings = void 0;
-	var t = n(or());
+	var t = n(cr());
 	function n(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -9261,7 +9265,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return i ? i.width : 0;
 	}
 	e.getMaximumHeightOfEncodings = s, e.getEncodingHeight = r, e.getBarcodePadding = i, e.calculateEncodingAttributes = a, e.getTotalWidthOfEncodings = o;
-})), pr = /* @__PURE__ */ o(((e) => {
+})), hr = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -9273,7 +9277,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return function(t, n, r) {
 			return n && e(t.prototype, n), r && e(t, r), t;
 		};
-	}(), n = i(or()), r = fr();
+	}(), n = i(cr()), r = mr();
 	function i(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -9341,7 +9345,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		]), e;
 	}();
-})), mr = /* @__PURE__ */ o(((e) => {
+})), gr = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -9353,7 +9357,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return function(t, n, r) {
 			return n && e(t.prototype, n), r && e(t, r), t;
 		};
-	}(), n = i(or()), r = fr();
+	}(), n = i(cr()), r = mr();
 	function i(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -9432,7 +9436,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		]), e;
 	}();
-})), hr = /* @__PURE__ */ o(((e) => {
+})), _r = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -9459,9 +9463,9 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		}]), e;
 	}();
-})), gr = /* @__PURE__ */ o(((e) => {
+})), vr = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
-	var t = i(pr()), n = i(mr()), r = i(hr());
+	var t = i(hr()), n = i(gr()), r = i(_r());
 	function i(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -9470,7 +9474,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		SVGRenderer: n.default,
 		ObjectRenderer: r.default
 	};
-})), _r = /* @__PURE__ */ o(((e) => {
+})), yr = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	function t(e, t) {
 		if (!(e instanceof t)) throw TypeError("Cannot call a class as a function");
@@ -9514,13 +9518,13 @@ var xn = /* @__PURE__ */ o(((e) => {
 		return i;
 	}(Error);
 	e.InvalidInputException = i, e.InvalidElementException = a, e.NoElementException = o;
-})), vr = /* @__PURE__ */ o(((e) => {
+})), br = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(e) {
 		return typeof e;
 	} : function(e) {
 		return e && typeof Symbol == "function" && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
-	}, n = a(dr()), r = a(gr()), i = _r();
+	}, n = a(pr()), r = a(vr()), i = yr();
 	function a(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -9570,7 +9574,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		};
 	}
 	e.default = o;
-})), yr = /* @__PURE__ */ o(((e) => {
+})), xr = /* @__PURE__ */ o(((e) => {
 	Object.defineProperty(e, "__esModule", { value: !0 });
 	var t = function() {
 		function e(e, t) {
@@ -9611,8 +9615,8 @@ var xn = /* @__PURE__ */ o(((e) => {
 			}
 		}]), e;
 	}();
-})), br = /* @__PURE__ */ o(((e, t) => {
-	var n = d(ar()), r = d(or()), i = d(sr()), a = d(cr()), o = d(vr()), s = d(lr()), c = d(yr()), l = _r(), u = d(ur());
+})), Sr = /* @__PURE__ */ o(((e, t) => {
+	var n = d(sr()), r = d(cr()), i = d(lr()), a = d(ur()), o = d(br()), s = d(dr()), c = d(xr()), l = yr(), u = d(fr());
 	function d(e) {
 		return e && e.__esModule ? e : { default: e };
 	}
@@ -9685,11 +9689,11 @@ var xn = /* @__PURE__ */ o(((e) => {
 			n.push(this);
 		}), p(n, e, t);
 	}), t.exports = p;
-})), xr = /* @__PURE__ */ o(((e, t) => {
+})), Cr = /* @__PURE__ */ o(((e, t) => {
 	t.exports = function() {
 		return typeof Promise == "function" && Promise.prototype && Promise.prototype.then;
 	};
-})), Sr = /* @__PURE__ */ o(((e) => {
+})), wr = /* @__PURE__ */ o(((e) => {
 	var t, n = [
 		0,
 		26,
@@ -9751,7 +9755,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 	}, e.toSJIS = function(e) {
 		return t(e);
 	};
-})), Cr = /* @__PURE__ */ o(((e) => {
+})), Tr = /* @__PURE__ */ o(((e) => {
 	e.L = { bit: 1 }, e.M = { bit: 0 }, e.Q = { bit: 3 }, e.H = { bit: 2 };
 	function t(t) {
 		if (typeof t != "string") throw Error("Param is not a string");
@@ -9777,7 +9781,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 			return r;
 		}
 	};
-})), wr = /* @__PURE__ */ o(((e, t) => {
+})), Er = /* @__PURE__ */ o(((e, t) => {
 	function n() {
 		this.buffer = [], this.length = 0;
 	}
@@ -9797,7 +9801,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 			this.buffer.length <= t && this.buffer.push(0), e && (this.buffer[t] |= 128 >>> this.length % 8), this.length++;
 		}
 	}, t.exports = n;
-})), Tr = /* @__PURE__ */ o(((e, t) => {
+})), Dr = /* @__PURE__ */ o(((e, t) => {
 	function n(e) {
 		if (!e || e < 1) throw Error("BitMatrix size must be defined and greater than 0");
 		this.size = e, this.data = new Uint8Array(e * e), this.reservedBit = new Uint8Array(e * e);
@@ -9812,8 +9816,8 @@ var xn = /* @__PURE__ */ o(((e) => {
 	}, n.prototype.isReserved = function(e, t) {
 		return this.reservedBit[e * this.size + t];
 	}, t.exports = n;
-})), Er = /* @__PURE__ */ o(((e) => {
-	var t = Sr().getSymbolSize;
+})), Or = /* @__PURE__ */ o(((e) => {
+	var t = wr().getSymbolSize;
 	e.getRowColCoords = function(e) {
 		if (e === 1) return [];
 		let n = Math.floor(e / 7) + 2, r = t(e), i = r === 145 ? 26 : Math.ceil((r - 13) / (2 * n - 2)) * 2, a = [r - 7];
@@ -9824,8 +9828,8 @@ var xn = /* @__PURE__ */ o(((e) => {
 		for (let e = 0; e < i; e++) for (let t = 0; t < i; t++) e === 0 && t === 0 || e === 0 && t === i - 1 || e === i - 1 && t === 0 || n.push([r[e], r[t]]);
 		return n;
 	};
-})), Dr = /* @__PURE__ */ o(((e) => {
-	var t = Sr().getSymbolSize, n = 7;
+})), kr = /* @__PURE__ */ o(((e) => {
+	var t = wr().getSymbolSize, n = 7;
 	e.getPositions = function(e) {
 		let r = t(e);
 		return [
@@ -9834,7 +9838,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 			[0, r - n]
 		];
 	};
-})), Or = /* @__PURE__ */ o(((e) => {
+})), Ar = /* @__PURE__ */ o(((e) => {
 	e.Patterns = {
 		PATTERN000: 0,
 		PATTERN001: 1,
@@ -9910,8 +9914,8 @@ var xn = /* @__PURE__ */ o(((e) => {
 		}
 		return i;
 	};
-})), kr = /* @__PURE__ */ o(((e) => {
-	var t = Cr(), n = [
+})), jr = /* @__PURE__ */ o(((e) => {
+	var t = Tr(), n = [
 		1,
 		1,
 		1,
@@ -10251,7 +10255,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 			default: return;
 		}
 	};
-})), Ar = /* @__PURE__ */ o(((e) => {
+})), Mr = /* @__PURE__ */ o(((e) => {
 	var t = /* @__PURE__ */ new Uint8Array(512), n = /* @__PURE__ */ new Uint8Array(256);
 	(function() {
 		let e = 1;
@@ -10265,8 +10269,8 @@ var xn = /* @__PURE__ */ o(((e) => {
 	}, e.mul = function(e, r) {
 		return e === 0 || r === 0 ? 0 : t[n[e] + n[r]];
 	};
-})), jr = /* @__PURE__ */ o(((e) => {
-	var t = Ar();
+})), Nr = /* @__PURE__ */ o(((e) => {
+	var t = Mr();
 	e.mul = function(e, n) {
 		let r = new Uint8Array(e.length + n.length - 1);
 		for (let i = 0; i < e.length; i++) for (let a = 0; a < n.length; a++) r[i + a] ^= t.mul(e[i], n[a]);
@@ -10286,8 +10290,8 @@ var xn = /* @__PURE__ */ o(((e) => {
 		for (let i = 0; i < n; i++) r = e.mul(r, new Uint8Array([1, t.exp(i)]));
 		return r;
 	};
-})), Mr = /* @__PURE__ */ o(((e, t) => {
-	var n = jr();
+})), Pr = /* @__PURE__ */ o(((e, t) => {
+	var n = Nr();
 	function r(e) {
 		this.genPoly = void 0, this.degree = e, this.degree && this.initialize(this.degree);
 	}
@@ -10304,11 +10308,11 @@ var xn = /* @__PURE__ */ o(((e) => {
 		}
 		return r;
 	}, t.exports = r;
-})), Nr = /* @__PURE__ */ o(((e) => {
+})), Fr = /* @__PURE__ */ o(((e) => {
 	e.isValid = function(e) {
 		return !isNaN(e) && e >= 1 && e <= 40;
 	};
-})), Pr = /* @__PURE__ */ o(((e) => {
+})), Ir = /* @__PURE__ */ o(((e) => {
 	var t = "[0-9]+", n = "[A-Z $%*+\\-./:]+", r = "(?:[u3000-u303F]|[u3040-u309F]|[u30A0-u30FF]|[uFF00-uFFEF]|[u4E00-u9FAF]|[u2605-u2606]|[u2190-u2195]|u203B|[u2010u2015u2018u2019u2025u2026u201Cu201Du2225u2260]|[u0391-u0451]|[u00A7u00A8u00B1u00B4u00D7u00F7])+";
 	r = r.replace(/u/g, "\\u");
 	var i = "(?:(?![A-Z0-9 $%*+\\-./:]|" + r + ")(?:.|[\r\n]))+";
@@ -10321,8 +10325,8 @@ var xn = /* @__PURE__ */ o(((e) => {
 	}, e.testAlphanumeric = function(e) {
 		return s.test(e);
 	};
-})), Fr = /* @__PURE__ */ o(((e) => {
-	var t = Nr(), n = Pr();
+})), Lr = /* @__PURE__ */ o(((e) => {
+	var t = Fr(), n = Ir();
 	e.NUMERIC = {
 		id: "Numeric",
 		bit: 1,
@@ -10385,8 +10389,8 @@ var xn = /* @__PURE__ */ o(((e) => {
 			return n;
 		}
 	};
-})), Ir = /* @__PURE__ */ o(((e) => {
-	var t = Sr(), n = kr(), r = Cr(), i = Fr(), a = Nr(), o = 7973, s = t.getBCHDigit(o);
+})), Rr = /* @__PURE__ */ o(((e) => {
+	var t = wr(), n = jr(), r = Tr(), i = Lr(), a = Fr(), o = 7973, s = t.getBCHDigit(o);
 	function c(t, n, r) {
 		for (let i = 1; i <= 40; i++) if (n <= e.getCapacity(i, r, t)) return i;
 	}
@@ -10432,15 +10436,15 @@ var xn = /* @__PURE__ */ o(((e) => {
 		for (; t.getBCHDigit(n) - s >= 0;) n ^= o << t.getBCHDigit(n) - s;
 		return e << 12 | n;
 	};
-})), Lr = /* @__PURE__ */ o(((e) => {
-	var t = Sr(), n = 1335, r = 21522, i = t.getBCHDigit(n);
+})), zr = /* @__PURE__ */ o(((e) => {
+	var t = wr(), n = 1335, r = 21522, i = t.getBCHDigit(n);
 	e.getEncodedBits = function(e, a) {
 		let o = e.bit << 3 | a, s = o << 10;
 		for (; t.getBCHDigit(s) - i >= 0;) s ^= n << t.getBCHDigit(s) - i;
 		return (o << 10 | s) ^ r;
 	};
-})), Rr = /* @__PURE__ */ o(((e, t) => {
-	var n = Fr();
+})), Br = /* @__PURE__ */ o(((e, t) => {
+	var n = Lr();
 	function r(e) {
 		this.mode = n.NUMERIC, this.data = e.toString();
 	}
@@ -10456,8 +10460,8 @@ var xn = /* @__PURE__ */ o(((e) => {
 		let i = this.data.length - t;
 		i > 0 && (n = this.data.substr(t), r = parseInt(n, 10), e.put(r, i * 3 + 1));
 	}, t.exports = r;
-})), zr = /* @__PURE__ */ o(((e, t) => {
-	var n = Fr(), r = /* @__PURE__ */ "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:".split("");
+})), Vr = /* @__PURE__ */ o(((e, t) => {
+	var n = Lr(), r = /* @__PURE__ */ "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:".split("");
 	function i(e) {
 		this.mode = n.ALPHANUMERIC, this.data = e;
 	}
@@ -10475,8 +10479,8 @@ var xn = /* @__PURE__ */ o(((e) => {
 		}
 		this.data.length % 2 && e.put(r.indexOf(this.data[t]), 6);
 	}, t.exports = i;
-})), Br = /* @__PURE__ */ o(((e, t) => {
-	var n = Fr();
+})), Hr = /* @__PURE__ */ o(((e, t) => {
+	var n = Lr();
 	function r(e) {
 		this.mode = n.BYTE, this.data = typeof e == "string" ? new TextEncoder().encode(e) : new Uint8Array(e);
 	}
@@ -10489,8 +10493,8 @@ var xn = /* @__PURE__ */ o(((e) => {
 	}, r.prototype.write = function(e) {
 		for (let t = 0, n = this.data.length; t < n; t++) e.put(this.data[t], 8);
 	}, t.exports = r;
-})), Vr = /* @__PURE__ */ o(((e, t) => {
-	var n = Fr(), r = Sr();
+})), Ur = /* @__PURE__ */ o(((e, t) => {
+	var n = Lr(), r = wr();
 	function i(e) {
 		this.mode = n.KANJI, this.data = e;
 	}
@@ -10510,7 +10514,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 			n = (n >>> 8 & 255) * 192 + (n & 255), e.put(n, 13);
 		}
 	}, t.exports = i;
-})), Hr = /* @__PURE__ */ o(((e, t) => {
+})), Wr = /* @__PURE__ */ o(((e, t) => {
 	var n = {
 		single_source_shortest_paths: function(e, t, r) {
 			var i = {}, a = {};
@@ -10563,8 +10567,8 @@ var xn = /* @__PURE__ */ o(((e) => {
 		}
 	};
 	t !== void 0 && (t.exports = n);
-})), Ur = /* @__PURE__ */ o(((e) => {
-	var t = Fr(), n = Rr(), r = zr(), i = Br(), a = Vr(), o = Pr(), s = Sr(), c = Hr();
+})), Gr = /* @__PURE__ */ o(((e) => {
+	var t = Lr(), n = Br(), r = Vr(), i = Hr(), a = Ur(), o = Ir(), s = wr(), c = Wr();
 	function l(e) {
 		return unescape(encodeURIComponent(e)).length;
 	}
@@ -10691,8 +10695,8 @@ var xn = /* @__PURE__ */ o(((e) => {
 	}, e.rawSplit = function(t) {
 		return e.fromArray(d(t, s.isKanjiModeEnabled()));
 	};
-})), Wr = /* @__PURE__ */ o(((e) => {
-	var t = Sr(), n = Cr(), r = wr(), i = Tr(), a = Er(), o = Dr(), s = Or(), c = kr(), l = Mr(), u = Ir(), d = Lr(), f = Fr(), p = Ur();
+})), Kr = /* @__PURE__ */ o(((e) => {
+	var t = wr(), n = Tr(), r = Er(), i = Dr(), a = Or(), o = kr(), s = Ar(), c = jr(), l = Pr(), u = Rr(), d = zr(), f = Lr(), p = Gr();
 	function m(e, t) {
 		let n = e.size, r = o.getPositions(t);
 		for (let t = 0; t < r.length; t++) {
@@ -10787,7 +10791,7 @@ var xn = /* @__PURE__ */ o(((e) => {
 		let i = n.M, a, o;
 		return r !== void 0 && (i = n.from(r.errorCorrectionLevel, n.M), a = u.from(r.version), o = s.from(r.maskPattern), r.toSJISFunc && t.setToSJISFunction(r.toSJISFunc)), S(e, a, i, o);
 	};
-})), Gr = /* @__PURE__ */ o(((e) => {
+})), qr = /* @__PURE__ */ o(((e) => {
 	function t(e) {
 		if (typeof e == "number" && (e = e.toString()), typeof e != "string") throw Error("Color should be defined as hex string");
 		let t = e.slice().replace("#", "").split("");
@@ -10834,8 +10838,8 @@ var xn = /* @__PURE__ */ o(((e) => {
 			t[u++] = d.r, t[u++] = d.g, t[u++] = d.b, t[u] = d.a;
 		}
 	};
-})), Kr = /* @__PURE__ */ o(((e) => {
-	var t = Gr();
+})), Jr = /* @__PURE__ */ o(((e) => {
+	var t = qr();
 	function n(e, t, n) {
 		e.clearRect(0, 0, t.width, t.height), t.style ||= {}, t.height = n, t.width = n, t.style.height = n + "px", t.style.width = n + "px";
 	}
@@ -10857,8 +10861,8 @@ var xn = /* @__PURE__ */ o(((e) => {
 		let a = e.render(t, n, i), o = i.type || "image/png", s = i.rendererOpts || {};
 		return a.toDataURL(o, s.quality);
 	};
-})), qr = /* @__PURE__ */ o(((e) => {
-	var t = Gr();
+})), Yr = /* @__PURE__ */ o(((e) => {
+	var t = qr();
 	function n(e, t) {
 		let n = e.a / 255, r = t + "=\"" + e.hex + "\"";
 		return n < 1 ? r + " " + t + "-opacity=\"" + n.toFixed(2).slice(1) + "\"" : r;
@@ -10879,8 +10883,8 @@ var xn = /* @__PURE__ */ o(((e) => {
 		let o = t.getOptions(r), s = e.modules.size, c = e.modules.data, l = s + o.margin * 2, u = o.color.light.a ? "<path " + n(o.color.light, "fill") + " d=\"M0 0h" + l + "v" + l + "H0z\"/>" : "", d = "<path " + n(o.color.dark, "stroke") + " d=\"" + i(c, s, o.margin) + "\"/>", f = "viewBox=\"0 0 " + l + " " + l + "\"", p = "<svg xmlns=\"http://www.w3.org/2000/svg\" " + (o.width ? "width=\"" + o.width + "\" height=\"" + o.width + "\" " : "") + f + " shape-rendering=\"crispEdges\">" + u + d + "</svg>\n";
 		return typeof a == "function" && a(null, p), p;
 	};
-})), Jr = /* @__PURE__ */ o(((e) => {
-	var t = xr(), n = Wr(), r = Kr(), i = qr();
+})), Xr = /* @__PURE__ */ o(((e) => {
+	var t = Cr(), n = Kr(), r = Jr(), i = Yr();
 	function a(e, r, i, a, o) {
 		let s = [].slice.call(arguments, 1), c = s.length, l = typeof s[c - 1] == "function";
 		if (!l && !t()) throw Error("Callback required as last argument");
@@ -10907,14 +10911,14 @@ var xn = /* @__PURE__ */ o(((e) => {
 	e.create = n.create, e.toCanvas = a.bind(null, r.render), e.toDataURL = a.bind(null, r.renderToDataURL), e.toString = a.bind(null, function(e, t, n) {
 		return i.render(e, n);
 	});
-})), Yr = /* @__PURE__ */ c(br(), 1), Xr = /* @__PURE__ */ c(Jr(), 1), Zr = /* @__PURE__ */ new Set([
+})), Zr = /* @__PURE__ */ c(Sr(), 1), Qr = /* @__PURE__ */ c(Xr(), 1), $r = /* @__PURE__ */ new Set([
 	"EAN13",
 	"EAN8",
 	"UPC",
 	"ITF14",
 	"MSI"
 ]);
-function Qr(e) {
+function ei(e) {
 	if (!/^(?:\d{8}|\d{12,14})$/.test(e)) return !1;
 	let t = e.split("").map(Number), n = t.pop();
 	if (n === void 0) return !1;
@@ -10922,9 +10926,9 @@ function Qr(e) {
 	for (let e = 0; e < t.length; e += 1) r += t[t.length - 1 - e] * (e % 2 == 0 ? 3 : 1);
 	return (10 - r % 10) % 10 === n;
 }
-function $r(e) {
+function ti(e) {
 	let t = e.replace(/[\s-]/g, "");
-	if (/^\d+$/.test(t) && Qr(t)) switch (t.length) {
+	if (/^\d+$/.test(t) && ei(t)) switch (t.length) {
 		case 8: return "EAN8";
 		case 12: return "UPC";
 		case 13: return "EAN13";
@@ -10932,29 +10936,32 @@ function $r(e) {
 		default: return;
 	}
 }
-function ei(e, t) {
+function ni(e, t) {
 	let n = t.trim();
-	return Zr.has(e) ? n.replace(/[\s-]/g, "") : n;
+	return $r.has(e) ? n.replace(/[\s-]/g, "") : n;
 }
-function ti(e) {
-	let { code: t } = e;
-	if (!t) return {
+function ri(e, t) {
+	return e ? e.replaceAll(ct, t) : t;
+}
+function ii(e) {
+	if (!e.code) return {
 		kind: "empty",
 		value: ""
 	};
+	let t = ri(e.code_pattern, e.code);
 	if (e.format === "qr") return {
 		kind: "qr",
 		value: t
 	};
 	if (e.format === "barcode") return {
 		kind: "barcode",
-		value: ei(e.barcode_format, t),
+		value: ni(e.barcode_format, t),
 		barcodeFormat: e.barcode_format
 	};
-	let n = $r(t);
+	let n = ti(t);
 	return n ? {
 		kind: "barcode",
-		value: ei(n, t),
+		value: ni(n, t),
 		barcodeFormat: n,
 		note: `Detected ${n} from the code format.`
 	} : {
@@ -10963,17 +10970,17 @@ function ti(e) {
 		note: "No supported barcode format detected, showing a QR code instead."
 	};
 }
-function ni(e, t, n) {
+function ai(e, t, n) {
 	if (!/^\d+$/.test(e)) return `${n} needs digits only.`;
-	if (e.length !== t) return e.length === t + 1 ? Qr(e) ? void 0 : `${n} check digit is invalid.` : `${n} needs ${t} or ${t + 1} digits, but the code has ${e.length}.`;
+	if (e.length !== t) return e.length === t + 1 ? ei(e) ? void 0 : `${n} check digit is invalid.` : `${n} needs ${t} or ${t + 1} digits, but the code has ${e.length}.`;
 }
-function ri(e, t) {
+function oi(e, t) {
 	if (!t) return "The code is empty.";
 	switch (e) {
-		case "EAN13": return ni(t, 12, "EAN-13");
-		case "EAN8": return ni(t, 7, "EAN-8");
-		case "UPC": return ni(t, 11, "UPC-A");
-		case "ITF14": return /^\d+$/.test(t) ? t.length === 13 ? void 0 : t.length === 14 ? Qr(t) ? void 0 : "ITF-14 check digit is invalid." : "ITF-14 needs 13 or 14 digits." : "ITF-14 needs digits only.";
+		case "EAN13": return ai(t, 12, "EAN-13");
+		case "EAN8": return ai(t, 7, "EAN-8");
+		case "UPC": return ai(t, 11, "UPC-A");
+		case "ITF14": return /^\d+$/.test(t) ? t.length === 13 ? void 0 : t.length === 14 ? ei(t) ? void 0 : "ITF-14 check digit is invalid." : "ITF-14 needs 13 or 14 digits." : "ITF-14 needs digits only.";
 		case "MSI": return /^\d+$/.test(t) ? void 0 : "MSI needs digits only.";
 		case "CODE39": return /^[0-9A-Z\-. $/+%]+$/i.test(t) ? void 0 : "Code 39 supports digits, letters and - . space $ / + %.";
 		case "CODE128": return /^[\x20-\x7e]+$/.test(t) ? void 0 : "Code 128 supports printable ASCII characters only.";
@@ -10982,8 +10989,8 @@ function ri(e, t) {
 		default: return "Unsupported barcode format.";
 	}
 }
-async function ii(e) {
-	return Xr.toString(e, {
+async function si(e) {
+	return Qr.toString(e, {
 		type: "svg",
 		errorCorrectionLevel: "H",
 		margin: 2,
@@ -10993,8 +11000,8 @@ async function ii(e) {
 		}
 	});
 }
-function ai(e, t, n, r) {
-	(0, Yr.default)(e, t, {
+function ci(e, t, n, r) {
+	(0, Zr.default)(e, t, {
 		format: n,
 		width: r.width,
 		height: r.height,
@@ -11006,17 +11013,17 @@ function ai(e, t, n, r) {
 	let i = Number.parseFloat(e.getAttribute("width") ?? "");
 	e.removeAttribute("width"), e.removeAttribute("height"), Number.isFinite(i) && i > 0 && (e.style.width = `${i}px`), e.setAttribute("preserveAspectRatio", "xMidYMid meet"), e.setAttribute("role", "img");
 }
-function oi(e, t) {
+function li(e, t) {
 	let n;
 	try {
-		n = bn({
+		n = Sn({
 			bcid: "pdf417",
 			text: e,
 			scale: t,
 			padding: 8,
 			backgroundcolor: "ffffff",
 			barcolor: "000000"
-		}, gn());
+		}, vn());
 	} catch (e) {
 		let t = e instanceof Error ? e.message : String(e);
 		throw Error(t.replace(/^[\w.]+#\d+:\s*/, ""));
@@ -11025,7 +11032,7 @@ function oi(e, t) {
 	return n.replace("<svg ", `<svg class="barcode" role="img" aria-label="PDF417 barcode" preserveAspectRatio="xMidYMid meet"${r ? ` style="width: ${r}px"` : ""} `);
 }
 // src/styles.ts
-var si = h`
+var ui = h`
   :host {
     display: block;
     height: 100%;
@@ -11467,19 +11474,77 @@ var si = h`
       animation: none;
     }
   }
-`;
+`, di = [{
+	id: "biedronka",
+	title: "Biedronka",
+	country: "PL",
+	color: "#FFED00",
+	format: "barcode",
+	barcode_format: "PDF417",
+	code_pattern: "1,<CODE>,",
+	logo: "https://github.com/MarcinVaadin/loyalty-flip-card/blob/main/logo/biedronka.png?raw=true"
+}], fi = [
+	"title",
+	"subtitle",
+	"color",
+	"icon",
+	"logo",
+	"format",
+	"barcode_format",
+	"code_pattern",
+	"barcode_width",
+	"barcode_height",
+	"qr_size",
+	"fallback_to_qr"
+], pi = [
+	"title",
+	"icon",
+	"logo",
+	"color",
+	"format",
+	"barcode_format",
+	"code_pattern"
+], mi = [
+	"title",
+	"format",
+	"barcode_format",
+	"code_pattern"
+], hi = di;
+function gi(e) {
+	return e.country ? `${e.title} (${e.country})` : e.title;
+}
+function _i(e) {
+	return hi.find((t) => t.id === e);
+}
+function vi(e) {
+	return hi.find((t) => mi.every((n) => t[n] === e[n]))?.id;
+}
+function yi(e, t) {
+	let n = { ...e };
+	for (let e of pi) delete n[e];
+	for (let e of fi) t[e] !== void 0 && (n[e] = t[e]);
+	return n;
+}
 // \0@oxc-project+runtime@0.155.0/helpers/esm/decorate.js
-function ci(e, t, n, r) {
+function bi(e, t, n, r) {
 	var i = arguments.length, a = i < 3 ? t : r === null ? r = Object.getOwnPropertyDescriptor(t, n) : r, o;
 	if (typeof Reflect == "object" && typeof Reflect.decorate == "function") a = Reflect.decorate(e, t, n, r);
 	else for (var s = e.length - 1; s >= 0; s--) (o = e[s]) && (a = (i < 3 ? o(a) : i > 3 ? o(t, n, a) : o(t, n)) || a);
 	return i > 3 && a && Object.defineProperty(t, n, a), a;
 }
 // src/loyalty-flip-card-editor.ts
-var li = {
+var xi = "custom", Si = [{
+	value: xi,
+	label: "Custom"
+}, ...hi.map((e) => ({
+	value: e.id,
+	label: gi(e)
+})).sort((e, t) => e.label.localeCompare(t.label))], Ci = {
+	template: "Shop template",
 	code: "Code",
 	format: "Symbol type",
 	barcode_format: "Barcode format",
+	code_pattern: "Code pattern",
 	title: "Title",
 	subtitle: "Subtitle",
 	show_icon: "Show icon or logo",
@@ -11492,7 +11557,9 @@ var li = {
 	barcode_height: "Barcode height (px)",
 	barcode_width: "Barcode bar width (px)",
 	fallback_to_qr: "Fall back to a QR code"
-}, ui = {
+}, wi = {
+	template: "Fills in the shop's title, color, logo and barcode settings. You can still change them below.",
+	code_pattern: "Optional. <CODE> is replaced with your code before encoding, e.g. 1,<CODE>,",
 	code: "The value encoded in the symbol. Quote numeric codes in YAML so leading zeros are preserved.",
 	format: "Auto-detect uses EAN/UPC for 8, 12, 13 or 14 digit codes with a valid check digit, and a QR code otherwise.",
 	fallback_to_qr: "Show a QR code when the value cannot be encoded as the selected barcode format.",
@@ -11500,13 +11567,13 @@ var li = {
 	barcode_width: "For PDF417 this sets the size of one module.",
 	title: "Leave empty to show only the logo or icon, centered on the card.",
 	logo: "Use a URL that Home Assistant can reach, for example /local/my-logo.png."
-}, di = {
+}, Ti = {
 	show_icon: st.show_icon,
 	show_code_text: st.show_code_text,
 	fallback_to_qr: st.fallback_to_qr
-}, fi = class extends Me {
+}, Ei = class extends Me {
 	constructor(...e) {
-		super(...e), this._computeLabel = (e) => li[e.name] ?? e.name, this._computeHelper = (e) => ui[e.name] ?? "";
+		super(...e), this._computeLabel = (e) => Ci[e.name] ?? e.name, this._computeHelper = (e) => wi[e.name] ?? "";
 	}
 	setConfig(e) {
 		this._config = { ...e };
@@ -11517,8 +11584,9 @@ var li = {
       <ha-form
         .hass=${this.hass}
         .data=${{
-			...di,
-			...e
+			...Ti,
+			...e,
+			template: vi(e) ?? xi
 		}}
         .schema=${this._buildSchema(e)}
         .computeLabel=${this._computeLabel}
@@ -11530,6 +11598,13 @@ var li = {
 	_buildSchema(e) {
 		let t = e.format ?? "qr";
 		return [
+			{
+				name: "template",
+				selector: { select: {
+					mode: "dropdown",
+					options: Si
+				} }
+			},
 			{
 				name: "code",
 				required: !0,
@@ -11565,6 +11640,10 @@ var li = {
 					}))
 				} }
 			}] : [],
+			{
+				name: "code_pattern",
+				selector: { text: {} }
+			},
 			{
 				name: "title",
 				selector: { text: {} }
@@ -11632,21 +11711,22 @@ var li = {
 		];
 	}
 	_valueChanged(e) {
-		this._config = { ...e.detail.value }, this.dispatchEvent(new CustomEvent("config-changed", {
-			detail: { config: e.detail.value },
+		let { template: t, ...n } = e.detail.value, r = this._config ? vi(this._config) : void 0, i = typeof t == "string" && t !== (r ?? xi) ? _i(t) : void 0, a = i ? yi(n, i) : n;
+		this._config = a, this.dispatchEvent(new CustomEvent("config-changed", {
+			detail: { config: a },
 			bubbles: !0,
 			composed: !0
 		}));
 	}
 };
-ci([Ie({ attribute: !1 })], fi.prototype, "hass", void 0), ci([Le()], fi.prototype, "_config", void 0), customElements.get("loyalty-flip-card-editor") || customElements.define("loyalty-flip-card-editor", fi);
+bi([Ie({ attribute: !1 })], Ei.prototype, "hass", void 0), bi([Le()], Ei.prototype, "_config", void 0), customElements.get("loyalty-flip-card-editor") || customElements.define("loyalty-flip-card-editor", Ei);
 // src/loyalty-flip-card.ts
-var pi = class extends Me {
+var Di = class extends Me {
 	constructor(...e) {
 		super(...e), this._open = !1, this._copied = !1, this._logoFailed = !1, this._content = "none", this._dialog = Ze(), this._trigger = Ze(), this._barcode = Ze(), this._renderToken = 0, this._renderKey = "";
 	}
 	static {
-		this.styles = si;
+		this.styles = ui;
 	}
 	static getStubConfig() {
 		return {
@@ -11660,7 +11740,7 @@ var pi = class extends Me {
 		return document.createElement("loyalty-flip-card-editor");
 	}
 	setConfig(e) {
-		this._config = mt(e), this._invalidate(), this._open && this._prepareCode();
+		this._config = gt(e), this._invalidate(), this._open && this._prepareCode();
 	}
 	getCardSize() {
 		return 2;
@@ -11676,7 +11756,7 @@ var pi = class extends Me {
 	render() {
 		let e = this._config;
 		return e ? B`
-      <ha-card style=${e.color ? `--loyalty-accent: ${e.color}; --loyalty-ink: ${gt(e.color)};` : ""}>${this._renderFace(e)}</ha-card>
+      <ha-card style=${e.color ? `--loyalty-accent: ${e.color}; --loyalty-ink: ${vt(e.color)};` : ""}>${this._renderFace(e)}</ha-card>
       ${this._renderDialog(e)}
     ` : V;
 	}
@@ -11815,6 +11895,7 @@ var pi = class extends Me {
 		if (!e) return;
 		let t = JSON.stringify([
 			e.code,
+			e.code_pattern,
 			e.format,
 			e.barcode_format,
 			e.qr_size,
@@ -11826,13 +11907,13 @@ var pi = class extends Me {
 		this._renderKey = t, this._renderToken += 1;
 		let n = this._renderToken;
 		this._svg = void 0, this._error = void 0, this._note = void 0;
-		let r = ti(e);
+		let r = ii(e);
 		r.kind === "empty" ? this._content = "empty" : r.kind === "qr" ? await this._showQr(r.value, n, r.note) : await this._showBarcode(r, n, e);
 	}
 	async _showQr(e, t, n) {
 		this._content = "qr", this._svg = void 0, n && (this._note = n);
 		try {
-			let n = await ii(e);
+			let n = await si(e);
 			if (t !== this._renderToken) return;
 			this._svg = n;
 		} catch {
@@ -11846,16 +11927,16 @@ var pi = class extends Me {
 			await this._showQr(e.value, t);
 			return;
 		}
-		let i = ri(r, e.value);
+		let i = oi(r, e.value);
 		if (i) {
 			await this._handleBarcodeProblem(i, e.value, n, t);
 			return;
 		}
 		if (r === "PDF417") {
 			try {
-				this._svg = oi(e.value, n.barcode_width), this._content = "pdf417", this._note = e.note;
+				this._svg = li(e.value, n.barcode_width), this._content = "pdf417", this._note = e.note;
 			} catch (i) {
-				await this._handleBarcodeProblem(mi(r, i), e.value, n, t);
+				await this._handleBarcodeProblem(Oi(r, i), e.value, n, t);
 			}
 			return;
 		}
@@ -11863,27 +11944,27 @@ var pi = class extends Me {
 		let a = this._barcode.value;
 		if (!a) await this._handleBarcodeProblem("The barcode could not be drawn.", e.value, n, t);
 		else try {
-			if (ai(a, e.value, r, {
+			if (ci(a, e.value, r, {
 				height: n.barcode_height,
 				width: n.barcode_width
 			}), t !== this._renderToken) return;
 			this._note = e.note;
 		} catch (i) {
-			await this._handleBarcodeProblem(mi(r, i), e.value, n, t);
+			await this._handleBarcodeProblem(Oi(r, i), e.value, n, t);
 		}
 	}
 	async _handleBarcodeProblem(e, t, n, r) {
 		n.fallback_to_qr ? await this._showQr(t, r, `${e} Showing a QR code instead.`) : (this._content = "error", this._error = e);
 	}
 };
-ci([Ie({ attribute: !1 })], pi.prototype, "hass", void 0), ci([Le()], pi.prototype, "_config", void 0), ci([Le()], pi.prototype, "_open", void 0), ci([Le()], pi.prototype, "_copied", void 0), ci([Le()], pi.prototype, "_logoFailed", void 0), ci([Le()], pi.prototype, "_content", void 0), ci([Le()], pi.prototype, "_svg", void 0), ci([Le()], pi.prototype, "_error", void 0), ci([Le()], pi.prototype, "_note", void 0);
-function mi(e, t) {
+bi([Ie({ attribute: !1 })], Di.prototype, "hass", void 0), bi([Le()], Di.prototype, "_config", void 0), bi([Le()], Di.prototype, "_open", void 0), bi([Le()], Di.prototype, "_copied", void 0), bi([Le()], Di.prototype, "_logoFailed", void 0), bi([Le()], Di.prototype, "_content", void 0), bi([Le()], Di.prototype, "_svg", void 0), bi([Le()], Di.prototype, "_error", void 0), bi([Le()], Di.prototype, "_note", void 0);
+function Oi(e, t) {
 	return `This value cannot be encoded as ${e}.${t instanceof Error && t.message ? ` ${t.message}` : ""}`;
 }
-customElements.get("loyalty-flip-card") || customElements.define("loyalty-flip-card", pi), window.customCards = window.customCards ?? [], window.customCards.some((e) => e.type === "loyalty-flip-card") || window.customCards.push({
+customElements.get("loyalty-flip-card") || customElements.define("loyalty-flip-card", Di), window.customCards = window.customCards ?? [], window.customCards.some((e) => e.type === "loyalty-flip-card") || window.customCards.push({
 	type: "loyalty-flip-card",
 	name: "Loyalty Flip Card",
 	description: "Displays a loyalty QR code or barcode in a tappable popup.",
 	preview: !0
 }), console.info("%c LOYALTY-FLIP-CARD %c v0.1.0 ", "color: #fff; background: #1a73e8; font-weight: 600; border-radius: 3px 0 0 3px;", "color: #1a73e8; background: #e8f0fe; border-radius: 0 3px 3px 0;");
-export { pi as LoyaltyFlipCard };
+export { Di as LoyaltyFlipCard };

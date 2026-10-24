@@ -50,6 +50,14 @@ After changing anything in `src/`, run `npm run build` so the committed `dist/` 
   based on `format`. It only works inside Home Assistant (needs `ha-form`). When adding a config
   option, update `LoyaltyFlipCardConfig`/`DEFAULT_CONFIG`/`normalizeConfig`, the editor schema +
   `LABELS`/`HELPERS`, the `_renderKey` inputs if it affects rendering, and the README options table.
+  If templates may set it, also add it to `TEMPLATE_KEYS` in `src/templates.ts`.
+- **Shop templates**: `templates.json` (repo root, community-contributed, bundled at build time) is
+  read by `src/templates.ts`. Templates are editor-only: the `template` select is a virtual field —
+  picking one runs `applyTemplate()` to copy values into the config, and the `template` key is never
+  saved. `matchTemplate()` derives the shown selection from title/format/barcode_format/code_pattern.
+  `code_pattern` is a regular runtime option (`applyCodePattern()` in `resolveCode`); the popup
+  still shows/copies the raw `code`. `tests/templates.test.ts` is the gate for template PRs
+  (rules in `CONTRIBUTING.md`); CI runs prettier check, typecheck, tests and build.
 - **HA types** are minimal local stubs in `src/types.ts` (no HA frontend dependency).
 
 ## Testing / dev harness notes
@@ -60,7 +68,8 @@ After changing anything in `src/`, run `npm run build` so the committed `dist/` 
 
 ## Constraints
 
-- No runtime network requests and never log the code value (privacy is a stated feature).
+- No runtime network requests besides the configured logo image, and never log the code value
+  (privacy is a stated feature). Template logos are served from this repo's `logo/` via GitHub.
 - The `code` is a static config string, not an entity; leading/trailing whitespace is trimmed.
 
 ## Release
