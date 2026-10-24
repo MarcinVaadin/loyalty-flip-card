@@ -1,3 +1,4 @@
+import { drawingSVG, pdf417 } from '@bwip-js/browser';
 import JsBarcode from 'jsbarcode';
 import QRCode from 'qrcode';
 import type { BarcodeFormat, LoyaltyFlipCardConfig } from './config';
@@ -129,6 +130,11 @@ export function validateBarcodeValue(format: BarcodeFormat, value: string): stri
       return /^[A-D]?[0-9\-.$:/+]+[A-D]?$/i.test(value)
         ? undefined
         : 'Codabar supports digits and - . $ : / + (optionally wrapped in A-D).';
+    case 'PDF417':
+      // PDF417's default character set is ISO-8859-1.
+      return /^[\x00-\xff]+$/.test(value)
+        ? undefined
+        : 'PDF417 supports Latin-1 (ISO-8859-1) characters only.';
     default:
       return 'Unsupported barcode format.';
   }
@@ -179,4 +185,41 @@ export function renderBarcodeSvg(
   }
   element.setAttribute('preserveAspectRatio', 'xMidYMid meet');
   element.setAttribute('role', 'img');
+}
+
+/**
+ * Renders a PDF417 symbol as an SVG string. The module size follows
+ * `barcode_width`; the symbol height is determined by its row count. Throws
+ * when the value is too long to encode.
+ */
+export function renderPdf417Svg(value: string, moduleWidth: number): string {
+  let svg: string;
+  try {
+    svg = pdf417(
+      {
+        bcid: 'pdf417',
+        text: value,
+        scale: moduleWidth,
+        padding: 8,
+        backgroundcolor: 'ffffff',
+        barcolor: '000000',
+      },
+      drawingSVG(),
+    );
+  } catch (error) {
+    // bwip-js prefixes messages with an internal id such as
+    // "bwipp.pdf417inputTooLong#22902: ".
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(message.replace(/^[\w.]+#\d+:\s*/, ''));
+  }
+
+  // Keep the natural width as a preferred size (like 1D barcodes) and let CSS
+  // scale it down to the popup width.
+  const width = /viewBox="0 0 ([\d.]+) /.exec(svg)?.[1];
+  return svg.replace(
+    '<svg ',
+    `<svg class="barcode" role="img" aria-label="PDF417 barcode" preserveAspectRatio="xMidYMid meet"${
+      width ? ` style="width: ${width}px"` : ''
+    } `,
+  );
 }

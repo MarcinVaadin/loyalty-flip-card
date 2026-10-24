@@ -109,6 +109,48 @@ export const cardStyles = css`
     white-space: nowrap;
   }
 
+  /* No title: the logo or icon is the whole face, centered and enlarged. The
+     hint row is taken out of the flow so it does not push the badge up. */
+  .face--centered {
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .face--centered .face__head {
+    flex-direction: column;
+    gap: 8px;
+    max-width: 100%;
+  }
+
+  .face--centered .badge {
+    width: auto;
+    min-width: 64px;
+    max-width: 100%;
+    height: 64px;
+  }
+
+  .face--centered .badge img {
+    width: auto;
+    max-width: 100%;
+  }
+
+  .face--centered .badge ha-icon {
+    --mdc-icon-size: 40px;
+  }
+
+  .face--centered .face__copy {
+    max-width: 100%;
+  }
+
+  .face--centered .face__hint {
+    position: absolute;
+    right: 20px;
+    bottom: 14px;
+    left: 20px;
+  }
+
   .face__hint {
     display: flex;
     align-items: center;
@@ -204,6 +246,7 @@ export const cardStyles = css`
     flex: 0 0 auto;
     width: 38px;
     height: 38px;
+    margin-left: auto;
     padding: 0;
     border: 0;
     border-radius: 50%;
