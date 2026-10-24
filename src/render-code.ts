@@ -1,7 +1,7 @@
 import { drawingSVG, pdf417 } from '@bwip-js/browser';
 import JsBarcode from 'jsbarcode';
 import QRCode from 'qrcode';
-import type { BarcodeFormat, LoyaltyFlipCardConfig } from './config';
+import { CODE_PLACEHOLDER, type BarcodeFormat, type LoyaltyFlipCardConfig } from './config';
 
 export interface ResolvedCode {
   kind: 'empty' | 'qr' | 'barcode';
@@ -58,9 +58,14 @@ export function normalizeBarcodeValue(format: BarcodeFormat, value: string): str
   return SEPARATOR_FORMATS.has(format) ? trimmed.replace(/[\s-]/g, '') : trimmed;
 }
 
+/** Inserts the code into a `code_pattern`, or returns it unchanged without one. */
+export function applyCodePattern(pattern: string | undefined, code: string): string {
+  return pattern ? pattern.replaceAll(CODE_PLACEHOLDER, code) : code;
+}
+
 export function resolveCode(config: LoyaltyFlipCardConfig): ResolvedCode {
-  const { code } = config;
-  if (!code) return { kind: 'empty', value: '' };
+  if (!config.code) return { kind: 'empty', value: '' };
+  const code = applyCodePattern(config.code_pattern, config.code);
 
   if (config.format === 'qr') {
     return { kind: 'qr', value: code };

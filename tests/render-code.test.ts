@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { normalizeConfig } from '../src/config';
 import {
+  applyCodePattern,
   detectBarcodeFormat,
   isValidGtin,
   normalizeBarcodeValue,
@@ -90,6 +91,28 @@ describe('resolveCode', () => {
     const resolved = resolveCode(makeConfig({ code: 'MEMBER-42', format: 'auto' }));
     expect(resolved.kind).toBe('qr');
     expect(resolved.note).toContain('QR code');
+  });
+});
+
+describe('code_pattern', () => {
+  it('wraps the code before encoding', () => {
+    expect(applyCodePattern('1,<CODE>,', '42')).toBe('1,42,');
+    expect(applyCodePattern('<CODE>-<CODE>', '7')).toBe('7-7');
+    expect(applyCodePattern(undefined, '42')).toBe('42');
+  });
+
+  it('is applied by resolveCode for QR and barcodes', () => {
+    expect(resolveCode(makeConfig({ code: '42', code_pattern: 'M:<CODE>' })).value).toBe('M:42');
+    expect(
+      resolveCode(
+        makeConfig({
+          code: '42',
+          code_pattern: '1,<CODE>,',
+          format: 'barcode',
+          barcode_format: 'PDF417',
+        }),
+      ),
+    ).toMatchObject({ kind: 'barcode', value: '1,42,', barcodeFormat: 'PDF417' });
   });
 });
 

@@ -16,6 +16,12 @@ easy to scan at the checkout.
 - **Friendly validation.** Each symbology checks its value and explains what is wrong. Missing
   EAN/UPC/ITF check digits are calculated automatically. When a value cannot be encoded, the popup
   falls back to a QR code with a short note (`fallback_to_qr: false` shows the error instead).
+- **Shop templates.** Pick your shop in the visual editor and type only your card number; the
+  template fills in the title, color, logo and barcode settings. Templates are community-maintained
+  in `templates.json` — see [CONTRIBUTING.md](CONTRIBUTING.md) to add yours. First template:
+  Biedronka (PL).
+- **Code patterns.** `code_pattern` encodes extra text around your number (e.g. `'1,<CODE>,'`) while
+  the popup still shows and copies the plain number.
 - **Flexible card face.** Title, subtitle, icon or logo, and an accent color with automatically
   adjusted text color. Leave out `title` for a logo-only card with the logo or icon centered, or set
   `show_icon: false` to hide the icon or logo.
@@ -23,7 +29,7 @@ easy to scan at the checkout.
   optional code text below the symbol, and tap-to-copy. Closes with the close button, a tap on the
   backdrop, or <kbd>Esc</kbd>.
 - **Private by design.** Everything is rendered locally in the browser. The code is never sent
-  anywhere and never logged.
+  anywhere and never logged. Template logos are loaded from GitHub.
 - **Visual editor**, light and dark theme support, keyboard accessible, respects reduced motion,
   and works in the sections view grid.
 

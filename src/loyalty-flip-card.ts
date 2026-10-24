@@ -282,6 +282,7 @@ export class LoyaltyFlipCard extends LitElement {
 
     const key = JSON.stringify([
       config.code,
+      config.code_pattern,
       config.format,
       config.barcode_format,
       config.qr_size,

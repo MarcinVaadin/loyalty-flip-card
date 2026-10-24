@@ -1,0 +1,12 @@
+[
+  {
+    "id": "biedronka",
+    "title": "Biedronka",
+    "country": "PL",
+    "color": "#FFED00",
+    "format": "barcode",
+    "barcode_format": "PDF417",
+    "code_pattern": "1,<CODE>,",
+    "logo": "https://github.com/MarcinVaadin/loyalty-flip-card/blob/main/logo/biedronka.png?raw=true"
+  }
+]

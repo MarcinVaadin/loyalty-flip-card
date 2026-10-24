@@ -167,6 +167,23 @@ describe('loyalty-flip-card', () => {
     );
   });
 
+  it('shows and copies the raw code when a code pattern is used', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } });
+
+    const card = createCard({ code: '42', code_pattern: 'MEMBER:<CODE>' });
+    await open(card);
+    await vi.waitFor(() => {
+      expect(shadow(card).querySelector('.qr svg')).not.toBeNull();
+    });
+
+    expect(shadow(card).querySelector('.value')?.textContent).toBe('42');
+    shadow(card).querySelector<HTMLButtonElement>('.copy')?.click();
+    await vi.waitFor(() => {
+      expect(writeText).toHaveBeenCalledWith('42');
+    });
+  });
+
   it('closes via the backdrop and the close button', async () => {
     const card = createCard({ code: 'ABC' });
 

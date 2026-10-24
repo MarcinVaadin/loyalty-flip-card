@@ -5,11 +5,13 @@ it. Tapping the card opens a large, high-contrast popup that is easy to scan at 
 closes with a tap on the backdrop, the close button, or <kbd>Esc</kbd>.
 
 - QR codes, PDF417, and 1D barcodes: Code 128, EAN-13, EAN-8, UPC-A, Code 39, ITF-14, Codabar, MSI.
+- Shop templates: pick your shop in the visual editor and type only your card number.
 - Auto-detection of EAN/UPC barcodes from numeric loyalty numbers.
 - Optional branding: title, subtitle, icon or logo, accent color.
 - Optional fallback to a QR code when a barcode cannot encode the value.
 - Tap-to-copy the raw code.
 - Everything is rendered locally in the browser. The code is never sent anywhere and never logged.
+  (Logos from shop templates are loaded from GitHub; the code is not part of that request.)
 - Visual editor, light/dark theme support, keyboard accessible, respects reduced motion.
 
 ## Installation
@@ -51,6 +53,30 @@ Code 128 and QR values).
 The value is static by design: it is stored in the dashboard configuration, not read from an
 entity. Use a dashboard-only card if you do not want the code in a shared dashboard.
 
+## Shop templates
+
+In the visual editor, pick your shop under **Shop template** and enter your card number. The
+template fills in the title, color, logo and barcode settings, including any extra characters the
+shop's scanners expect around the number (`code_pattern`). You can change any value afterwards;
+the template is only a starting point and is not linked to the card.
+
+Using YAML? Copy the values of your shop from [`templates.json`](templates.json) (everything except
+`id` and `country`) and add your `code`:
+
+```yaml
+type: custom:loyalty-flip-card
+code: '1234567890'
+title: Biedronka
+color: '#FFED00'
+format: barcode
+barcode_format: PDF417
+code_pattern: '1,<CODE>,'
+logo: https://github.com/MarcinVaadin/loyalty-flip-card/blob/main/logo/biedronka.png?raw=true
+```
+
+Your shop is missing? Templates are contributed by the community: see
+[CONTRIBUTING.md](CONTRIBUTING.md#adding-a-shop-template).
+
 ## Options
 
 | Option           | Type    | Default                    | Description                                                                                                                             |
@@ -58,6 +84,7 @@ entity. Use a dashboard-only card if you do not want the code in a shared dashbo
 | `code`           | string  | **required**               | Value encoded in the QR code or barcode. Quote it in YAML.                                                                              |
 | `format`         | string  | `qr`                       | `qr`, `barcode`, or `auto`.                                                                                                             |
 | `barcode_format` | string  | `CODE128`                  | Symbology used when `format: barcode`.                                                                                                  |
+| `code_pattern`   | string  | –                          | Text encoded around the code. `<CODE>` is replaced with `code`, e.g. `'1,<CODE>,'`. The popup still shows and copies the plain `code`.  |
 | `title`          | string  | –                          | Card face title. Without it, only the logo or icon is shown, centered.                                                                  |
 | `subtitle`       | string  | –                          | Optional card face subtitle.                                                                                                            |
 | `show_icon`      | boolean | `true`                     | Show the icon or logo on the card face.                                                                                                 |
@@ -162,6 +189,7 @@ by this card. Longer values show a friendly error instead of a broken image.
 | `src/loyalty-flip-card-editor.ts` | Visual editor built on `ha-form`                           |
 | `src/config.ts`                   | Configuration normalization, defaults, contrast helper     |
 | `src/render-code.ts`              | Format detection, validation, QR and barcode SVG rendering |
+| `src/templates.ts`                | Shop templates from `templates.json` used by the editor    |
 | `src/styles.ts`                   | Card, popup and dark-mode styling                          |
 | `tests/`                          | Unit tests and DOM smoke tests (Vitest + jsdom)            |
 | `dev/`                            | Standalone demo harness with mocked Home Assistant pieces  |
@@ -169,7 +197,7 @@ by this card. Longer values show a friendly error instead of a broken image.
 The card bundles Lit, [`qrcode`](https://github.com/soldair/node-qrcode),
 [`JsBarcode`](https://github.com/lindell/JsBarcode) and
 [`bwip-js`](https://github.com/metafloor/bwip-js) (PDF417 only) into a single ES module. There are
-no runtime network requests.
+no runtime network requests other than loading the configured logo image.
 
 ## Development
 

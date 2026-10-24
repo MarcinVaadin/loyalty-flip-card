@@ -1,6 +1,7 @@
 import { LitElement, css, html } from 'lit';
 import { property } from 'lit/decorators.js';
 import '../src/loyalty-flip-card';
+import { findTemplate } from '../src/templates';
 
 const ICONS: Record<string, string> = {
   'mdi:card-account-details':
@@ -90,6 +91,11 @@ interface DemoCardElement extends HTMLElement {
   setConfig(config: Record<string, unknown>): void;
 }
 
+function templateConfig(id: string): DemoConfig {
+  const { id: _id, country: _country, ...values } = findTemplate(id) ?? { id, title: id };
+  return values;
+}
+
 const PRESETS: Array<{ label: string; config: DemoConfig }> = [
   {
     label: 'QR code',
@@ -134,6 +140,10 @@ const PRESETS: Array<{ label: string; config: DemoConfig }> = [
       subtitle: 'Frequent flyer',
       color: '#7c3aed',
     },
+  },
+  {
+    label: 'Template: Biedronka',
+    config: { ...templateConfig('biedronka'), code: '1234567890' },
   },
   {
     label: 'Icon only (no title)',

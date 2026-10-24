@@ -6,12 +6,25 @@ import {
   DEFAULT_CONFIG,
   type LoyaltyFlipCardConfig,
 } from './config';
+import { applyTemplate, findTemplate, matchTemplate, TEMPLATES, templateLabel } from './templates';
 import type { HaFormSchema, HomeAssistant, LovelaceCardConfig } from './types';
 
+// ha-form selects need a non-empty value for the "no template" option.
+const CUSTOM = 'custom';
+
+const TEMPLATE_OPTIONS = [
+  { value: CUSTOM, label: 'Custom' },
+  ...TEMPLATES.map((template) => ({ value: template.id, label: templateLabel(template) })).sort(
+    (a, b) => a.label.localeCompare(b.label),
+  ),
+];
+
 const LABELS: Record<string, string> = {
+  template: 'Shop template',
   code: 'Code',
   format: 'Symbol type',
   barcode_format: 'Barcode format',
+  code_pattern: 'Code pattern',
   title: 'Title',
   subtitle: 'Subtitle',
   show_icon: 'Show icon or logo',
@@ -27,6 +40,9 @@ const LABELS: Record<string, string> = {
 };
 
 const HELPERS: Record<string, string> = {
+  template:
+    "Fills in the shop's title, color, logo and barcode settings. You can still change them below.",
+  code_pattern: 'Optional. <CODE> is replaced with your code before encoding, e.g. 1,<CODE>,',
   code: 'The value encoded in the symbol. Quote numeric codes in YAML so leading zeros are preserved.',
   format:
     'Auto-detect uses EAN/UPC for 8, 12, 13 or 14 digit codes with a valid check digit, and a QR code otherwise.',
@@ -60,7 +76,7 @@ export class LoyaltyFlipCardEditor extends LitElement {
     return html`
       <ha-form
         .hass=${this.hass}
-        .data=${{ ...BOOLEAN_DEFAULTS, ...config }}
+        .data=${{ ...BOOLEAN_DEFAULTS, ...config, template: matchTemplate(config) ?? CUSTOM }}
         .schema=${this._buildSchema(config)}
         .computeLabel=${this._computeLabel}
         .computeHelper=${this._computeHelper}
@@ -73,6 +89,10 @@ export class LoyaltyFlipCardEditor extends LitElement {
     const format = config.format ?? 'qr';
 
     return [
+      {
+        name: 'template',
+        selector: { select: { mode: 'dropdown', options: TEMPLATE_OPTIONS } },
+      },
       {
         name: 'code',
         required: true,
@@ -107,6 +127,7 @@ export class LoyaltyFlipCardEditor extends LitElement {
             },
           ]
         : []),
+      { name: 'code_pattern', selector: { text: {} } },
       { name: 'title', selector: { text: {} } },
       { name: 'subtitle', selector: { text: {} } },
       { name: 'show_icon', selector: { boolean: {} } },
@@ -148,10 +169,20 @@ export class LoyaltyFlipCardEditor extends LitElement {
   private _computeHelper = (schema: HaFormSchema): string => HELPERS[schema.name] ?? '';
 
   private _valueChanged(event: CustomEvent<{ value: LovelaceCardConfig }>): void {
-    this._config = { ...event.detail.value } as LoyaltyFlipCardConfig;
+    // `template` is an editor-only field: picking one copies its values into
+    // the config, and the key itself is never saved.
+    const { template: picked, ...value } = event.detail.value;
+    const previous = this._config ? matchTemplate(this._config) : undefined;
+    const template =
+      typeof picked === 'string' && picked !== (previous ?? CUSTOM)
+        ? findTemplate(picked)
+        : undefined;
+    const config = template ? applyTemplate(value as LovelaceCardConfig, template) : value;
+
+    this._config = config as LoyaltyFlipCardConfig;
     this.dispatchEvent(
       new CustomEvent('config-changed', {
-        detail: { config: event.detail.value },
+        detail: { config },
         bubbles: true,
         composed: true,
       }),
