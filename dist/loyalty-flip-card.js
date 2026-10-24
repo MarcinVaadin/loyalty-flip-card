@@ -11474,16 +11474,67 @@ var ui = h`
       animation: none;
     }
   }
-`, di = [{
-	id: "biedronka",
-	title: "Biedronka",
-	country: "PL",
-	color: "#FFED00",
-	format: "barcode",
-	barcode_format: "PDF417",
-	code_pattern: "1,<CODE>,",
-	logo: "https://github.com/MarcinVaadin/loyalty-flip-card/blob/main/logo/biedronka.png?raw=true"
-}], fi = [
+`, di = [
+	{
+		id: "biedronka",
+		title: "Biedronka",
+		country: "PL",
+		color: "#FFED00",
+		format: "barcode",
+		barcode_format: "PDF417",
+		code_pattern: "1,<CODE>,",
+		logo: "https://github.com/MarcinVaadin/loyalty-flip-card/blob/main/logo/biedronka.png?raw=true"
+	},
+	{
+		id: "bricomarche",
+		title: "Bricomarché",
+		country: "PL",
+		color: "#E30613",
+		format: "barcode",
+		barcode_format: "CODE128"
+	},
+	{
+		id: "decathlon",
+		title: "Decathlon",
+		country: "PL",
+		color: "#3643BA",
+		format: "barcode",
+		barcode_format: "EAN13",
+		logo: "https://github.com/MarcinVaadin/loyalty-flip-card/blob/main/logo/decathlon.png?raw=true"
+	},
+	{
+		id: "empik",
+		title: "Empik",
+		country: "PL",
+		color: "#000000",
+		format: "barcode",
+		barcode_format: "EAN13",
+		logo: "https://github.com/MarcinVaadin/loyalty-flip-card/blob/main/logo/empik.png?raw=true"
+	},
+	{
+		id: "ikea",
+		title: "IKEA",
+		color: "#0051BA",
+		format: "qr",
+		logo: "https://github.com/MarcinVaadin/loyalty-flip-card/blob/main/logo/ikea.png?raw=true"
+	},
+	{
+		id: "lidl",
+		title: "Lidl",
+		color: "#0050AA",
+		format: "qr",
+		logo: "https://github.com/MarcinVaadin/loyalty-flip-card/blob/main/logo/lidl.png?raw=true"
+	},
+	{
+		id: "rossmann",
+		title: "Rossmann",
+		country: "PL",
+		color: "#C3002D",
+		format: "barcode",
+		barcode_format: "EAN13",
+		logo: "https://github.com/MarcinVaadin/loyalty-flip-card/blob/main/logo/rossmann.png?raw=true"
+	}
+], fi = [
 	"title",
 	"subtitle",
 	"color",
